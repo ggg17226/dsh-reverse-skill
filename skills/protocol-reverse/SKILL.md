@@ -1,9 +1,9 @@
 ---
 name: protocol-reverse
-description: Use for authorized reverse engineering of custom binary protocols, Protobuf/gRPC, WebSocket frames, and PCAP-driven protocol recovery.
+description: 用于已授权的自定义二进制协议、Protobuf/gRPC、WebSocket 帧，以及基于 PCAP 的协议还原逆向工程。
 ---
 
-# Protocol Reverse Engineering
+# 协议逆向工程
 
 ## ACTION REQUIRED（读完后立刻执行）
 

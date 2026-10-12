@@ -1,9 +1,9 @@
 ---
 name: go-rust-reverse
-description: Use for reverse engineering stripped Go and Rust binaries including runtime recognition, pclntab/moduel data recovery, panic strings, and idiomatic decompilation recovery.
+description: 用于剥离符号的 Go 与 Rust 二进制逆向，涵盖运行时识别、pclntab/模块数据恢复、panic 字符串与惯用写法的反编译还原。
 ---
 
-# Go / Rust Binary Reverse Engineering
+# Go / Rust 二进制逆向工程
 
 ## ACTION REQUIRED（读完后立刻执行）
 

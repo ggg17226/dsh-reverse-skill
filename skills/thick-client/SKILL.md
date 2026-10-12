@@ -1,9 +1,9 @@
 ---
 name: thick-client
-description: Use for authorized security testing of desktop thick clients including local storage, update channels, IPC, traffic, and client-side trust boundaries.
+description: 用于已授权的桌面厚客户端安全测试，涵盖本地存储、更新通道、IPC、流量与客户端侧信任边界。
 ---
 
-# Thick Client Security Testing
+# 厚客户端安全测试
 
 ## ACTION REQUIRED（读完后立刻执行）
 

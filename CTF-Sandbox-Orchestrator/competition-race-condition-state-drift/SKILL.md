@@ -1,50 +1,50 @@
 ---
 name: competition-race-condition-state-drift
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for race windows, ordering bugs, idempotency failures, lock gaps, concurrent worker drift, and state inconsistencies that produce decisive effects. Use when the user asks to reproduce timing-sensitive bugs, concurrent state corruption, duplicate actions, stale reads, or privilege or balance drift caused by request ordering. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向竞态窗口、顺序缺陷、幂等失效、锁缺口、并发 worker 漂移与会产生决定性效果的状态不一致的 CTF 沙箱工作流。当用户要求复现时序敏感缺陷、并发状态损坏、重复操作、过期读，或由请求顺序导致的权限或余额漂移时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Race Condition State Drift
+# 竞赛竞态条件与状态漂移
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive behavior depends on request timing, async ordering, lock gaps, or stale state.
+当决定性行为依赖请求时序、异步顺序、锁缺口或过期状态时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Identify mutable state first: rows, cache keys, queue payloads, session fields, counters, or files.
-2. Reproduce with smallest concurrent sequence and fixed timing assumptions.
-3. Capture one baseline run and one racing run with only one variable changed.
-4. Track read, check, write, enqueue, and commit boundaries separately.
-5. Prove final state drift from a clean reset.
+1. 先确定可变状态：数据行、缓存键、队列载荷、会话字段、计数器或文件。
+2. 用最小的并发序列并在固定的时序假设下复现。
+3. 捕获一次基线运行与一次竞态运行，只改变一个变量。
+4. 分别追踪读、检查、写、入队与提交这些边界。
+5. 从干净的重置状态出发证明最终状态漂移。
 
-## Workflow
+## 工作流
 
-### 1. Map Mutable Boundaries
+### 1. 梳理可变边界
 
-- Record transaction scope, lock behavior, retry logic, idempotency keys, cache invalidation, and queue handoff.
-- Note where read-check-write is split across requests, workers, or services.
-- Keep each boundary tied to exact timestamps or sequence numbers.
+- 记录事务范围、锁行为、重试逻辑、幂等键、缓存失效与队列交接。
+- 注明「读—检查—写」在何处被拆散到不同请求、worker 或服务之间。
+- 让每个边界都对应到确切的时间戳或序列号。
 
-### 2. Reproduce Timing Window
+### 2. 复现时序窗口
 
-- Build deterministic concurrent inputs with controlled delay, duplicate requests, or reordered worker execution.
-- Compare accepted and rejected paths under identical payloads.
-- Record which condition flips when ordering changes.
+- 用受控延迟、重复请求或重排的 worker 执行来构造确定性的并发输入。
+- 在完全相同的载荷下比较被接受与被拒绝的路径。
+- 记录顺序改变时究竟是哪个条件发生了翻转。
 
-### 3. Reduce To Decisive Race Chain
+### 3. 收敛到决定性竞态链
 
-- Compress to: request A and B ordering -> stale check or lock gap -> conflicting writes -> resulting capability or artifact.
-- State whether root cause is missing lock, weak idempotency, stale cache read, delayed async commit, or retry side effect.
-- If the path becomes queue-dominant, hand off to queue worker drift skill.
+- 压缩为：请求 A 与 B 的顺序 → 过期检查或锁缺口 → 冲突写入 → 得到的能力或产物。
+- 说明根因是缺少锁、幂等薄弱、缓存过期读、异步提交延迟，还是重试副作用。
+- 若路径以队列为主，交给 queue worker drift 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/race-condition-state-drift.md` for race harness ideas, evidence blocks, and parity checks.
+- 加载 `references/race-condition-state-drift.md`，获取竞态复现思路、证据区块与对照检查。
 
-## What To Preserve
+## 需要保留的内容
 
-- Mutable keys, transaction boundaries, lock behavior, and idempotency markers
-- Timestamped or sequenced traces for baseline and race runs
-- One minimal replayable concurrent sequence proving drift
+- 可变键、事务边界、锁行为与幂等标记
+- 基线与竞态运行各自的带时间戳或序列号的追踪记录
+- 一条能证明漂移的最小可重放并发序列

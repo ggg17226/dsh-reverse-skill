@@ -1,50 +1,50 @@
 ---
 name: competition-jwt-claim-confusion
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for JWT, JWS, and JWE validation paths, header parsing, key selection, claim acceptance, audience and issuer checks, role derivation, and token-to-identity confusion bugs. Use when the user asks to inspect JWT headers or claims, key lookup, `kid` handling, `alg` confusion, audience or issuer validation, role claims, or explain how a token becomes accepted identity or privilege. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 JWT、JWS 与 JWE 校验路径、头部解析、密钥选择、声明接受、audience 与 issuer 校验、角色推导与「令牌到身份」混淆缺陷的 CTF 沙箱工作流。当用户要求检查 JWT 头部或声明、密钥查找、`kid` 处理、`alg` 混淆、audience 或 issuer 校验、角色声明，或解释令牌如何变成被接受的身份或权限时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition JWT Claim Confusion
+# 竞赛 JWT 声明混淆
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive bug is not just "there is a JWT," but how headers, claims, and key selection turn into accepted identity.
+当决定性的缺陷不只是「这里有个 JWT」，而是头部、声明与密钥选择如何共同变成被接受的身份时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Split the token path into parse, key lookup, signature or decryption, claim validation, and final acceptance.
-2. Record header fields, claims, key source, issuer, audience, and role mapping before mutating anything.
-3. Separate possession of a token from the exact service that accepts it.
-4. Keep parser behavior, trust policy, and resulting app session or privilege in one chain.
-5. Reproduce the smallest token-to-acceptance flow that proves the decisive confusion.
+1. 把令牌路径拆成：解析、密钥查找、签名或解密、声明校验、最终接受。
+2. 在改动任何内容之前，先记录头部字段、声明、密钥来源、issuer、audience 与角色映射。
+3. 把「持有令牌」与「哪个服务会接受它」区分开。
+4. 把解析器行为、信任策略与由此得到的应用会话或权限放在同一条链上。
+5. 复现能证明该决定性混淆的最小「令牌到接受」流程。
 
-## Workflow
+## 工作流
 
-### 1. Map Header And Key Selection
+### 1. 梳理头部与密钥选择
 
-- Record header fields such as `alg`, `kid`, `typ`, `cty`, `jku`, or embedded key material when present.
-- Note where keys come from: static config, JWKS, local file, cache, or dynamic lookup.
-- Keep token parser, key selection path, and validation mode tied together.
+- 记录头部字段，例如 `alg`、`kid`、`typ`、`cty`、`jku`，或存在时的内嵌密钥材料。
+- 注明密钥的来源：静态配置、JWKS、本地文件、缓存还是动态查找。
+- 让令牌解析器、密钥选择路径与校验模式保持一一对应。
 
-### 2. Prove Claim-To-Privilege Acceptance
+### 2. 证明「声明到权限」的接受
 
-- Show how subject, audience, issuer, tenant, scope, role, or custom claims become app session, route access, or backend privilege.
-- Record expiration, not-before, clock skew, issuer matching, audience matching, and claim normalization behavior.
-- Distinguish token parse success from actual authorization success.
+- 说明 subject、audience、issuer、tenant、scope、role 或自定义声明如何变成应用会话、路由访问或后端权限。
+- 记录过期时间、not-before、时钟偏差、issuer 匹配、audience 匹配与声明归一化行为。
+- 把「令牌解析成功」与「授权实际成功」区分开。
 
-### 3. Reduce To The Decisive JWT Path
+### 3. 收敛到决定性 JWT 路径
 
-- Compress the result to the smallest sequence: token supplied -> parser or key path taken -> claim accepted -> resulting capability.
-- Keep one canonical accepted token path and one mutated token path if confusion or bypass depends on a delta.
-- If the task broadens into a larger OAuth redirect chain, hand back to the tighter OAuth skill.
+- 把结论压缩为最小序列：提供令牌 → 走到某条解析或密钥路径 → 声明被接受 → 得到能力。
+- 若混淆或绕过依赖某个差异，则同时保留一条规范可接受令牌路径与一条被改动令牌路径。
+- 若任务扩展到更大的 OAuth 重定向链，交回更贴合的 OAuth 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/jwt-claim-confusion.md` for the header checklist, claim checklist, and evidence packaging.
+- 加载 `references/jwt-claim-confusion.md`，获取头部检查清单、声明检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Raw headers, claims, key source, JWKS or local key path, and the accepting service
-- The exact validation or normalization step that turns the token into accepted identity
-- One minimal replayable token-to-acceptance sequence
+- 原始头部、声明、密钥来源、JWKS 或本地密钥路径，以及接受它的服务
+- 把令牌变成被接受身份的确切校验或归一化步骤
+- 一条最小的可重放「令牌到接受」序列

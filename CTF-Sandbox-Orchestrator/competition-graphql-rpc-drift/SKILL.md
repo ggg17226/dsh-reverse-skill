@@ -1,50 +1,50 @@
 ---
 name: competition-graphql-rpc-drift
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for GraphQL schemas, persisted queries, RPC manifests, generated clients, OpenAPI drift, hidden operations, and contract-to-handler mismatches. Use when the user asks to inspect GraphQL or RPC requests, compare client contracts to live handlers, recover hidden operations, trace generated clients, or explain how schema or contract drift produces the decisive behavior. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 GraphQL schema、持久化查询（persisted query）、RPC 清单、生成式客户端、OpenAPI 漂移、隐藏操作与「契约到处理器」不一致的 CTF 沙箱工作流。当用户要求检查 GraphQL 或 RPC 请求、把客户端契约与实时处理器对照、还原隐藏操作、追踪生成式客户端，或解释 schema 或契约漂移如何产生决定性行为时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Graphql Rpc Drift
+# 竞赛 GraphQL 与 RPC 漂移
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is matching declared contracts with live handlers to find hidden, stale, or privileged operations.
+当难点在于把「声明出来的契约」与「实时处理器」对照，从而找出隐藏的、过时的或高权限的操作时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Collect the declared contract surface first: schema, manifest, generated client, persisted query map, or OpenAPI spec.
-2. Record actual request shapes, operation names, variables, method, path, and auth context before mutating anything.
-3. Compare declared contract, generated client behavior, and live handler behavior side by side.
-4. Preserve one accepted operation and one drifted or hidden operation with the smallest delta.
-5. Reproduce the smallest contract-to-handler mismatch that proves the decisive branch.
+1. 先收集声明出的契约面：schema、manifest、生成式客户端、持久化查询映射或 OpenAPI spec。
+2. 在改动任何内容之前，先记录真实请求形态、操作名、变量、方法、路径与认证上下文。
+3. 把声明契约、生成式客户端行为与实时处理器行为三者并排比较。
+4. 保留一个被接受的操作与一个漂移或隐藏的操作，并给出两者的最小差异。
+5. 复现能证明决定性分支的最小「契约到处理器」不一致。
 
-## Workflow
+## 工作流
 
-### 1. Map The Declared Contract Surface
+### 1. 梳理声明出的契约面
 
-- Record GraphQL schema, introspection output, persisted query ids, RPC manifests, generated clients, or OpenAPI documents that define the intended surface.
-- Note versioned endpoints, client-only guards, hidden enums, optional fields, and operation naming conventions.
-- Keep document source and generation path tied to the observed requests.
+- 记录定义预期接口面的 GraphQL schema、introspection 输出、持久化查询 id、RPC 清单、生成式客户端或 OpenAPI 文档。
+- 注明带版本的端点、仅存在于客户端的校验、隐藏枚举、可选字段与操作命名约定。
+- 让文档来源与生成路径对应到实际观察到的请求。
 
-### 2. Prove Live Handler Behavior
+### 2. 证明实时处理器行为
 
-- Capture the real request and response pairs, including operation name, variables, headers, cookies, and status.
-- Compare client-side validation, schema expectations, and live handler normalization or fallback behavior.
-- Record hidden operations, stale fields, undocumented methods, or handler-only branches that still execute.
+- 抓取真实的请求与响应配对，包括操作名、变量、请求头、cookie 与状态码。
+- 比较客户端校验、schema 预期，与实时处理器的归一化或兜底行为。
+- 记录那些实际仍会执行的隐藏操作、过时字段、未文档化的方法或仅存在于处理器的分支。
 
-### 3. Reduce To The Decisive Drift Path
+### 3. 收敛到决定性漂移路径
 
-- Compress the result to the smallest sequence: declared contract -> actual request -> handler branch -> resulting capability.
-- State clearly whether the decisive drift lives in generated client assumptions, persisted query mapping, schema version skew, RPC manifest mismatch, or handler-side hidden logic.
-- If the task shifts into generic JWT, OAuth, or queue behavior after acceptance, hand off to the tighter specialized skill.
+- 把结论压缩为最小序列：声明契约 → 实际请求 → 处理器分支 → 得到能力。
+- 明确说明决定性漂移位于生成式客户端假设、持久化查询映射、schema 版本错配、RPC 清单不一致，还是处理器侧的隐藏逻辑。
+- 若任务在接受之后转向通用 JWT、OAuth 或队列行为，交给更贴合的专项技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/graphql-rpc-drift.md` for the contract checklist, live-handler checklist, and evidence packaging.
+- 加载 `references/graphql-rpc-drift.md`，获取契约检查清单、实时处理器检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Schemas, manifests, generated clients, persisted query ids, operation names, and version markers
-- One accepted and one drifted request pair that proves the mismatch
-- One minimal contract-to-handler sequence that reaches the decisive effect
+- Schema、manifest、生成式客户端、持久化查询 id、操作名与版本标记
+- 能证明不一致的一对「被接受请求 + 漂移请求」
+- 一条能到达决定性效果的最小「契约到处理器」序列

@@ -1,12 +1,12 @@
 ---
 name: docs-generator
 description: |
-  Creates task-oriented technical documentation with progressive disclosure. Use when writing READMEs, API docs, architecture docs, or markdown documentation.
-  Also use this skill at the END of any completed reverse engineering, penetration testing, CTF, or security analysis task to generate a formal report in the user's project directory.
-  Trigger keywords: 写报告, 写文档, 出报告, writeup, 技术文档, report, documentation.
+  生成面向任务、渐进披露的技术文档。在编写 README、API 文档、架构文档或 Markdown 文档时使用。
+  也应在任何已完成的逆向工程、渗透测试、CTF 或安全分析任务结束时使用本 skill，在用户项目目录中生成正式报告。
+  触发关键词：写报告, 写文档, 出报告, writeup, 技术文档, report, documentation.
 ---
 
-# Technical Documentation
+# 技术文档编写
 
 ## ACTION REQUIRED（读完后立刻执行）
 
@@ -15,7 +15,7 @@ description: |
 3. `NEXT`：缺工具时调用 bootstrap，不要猜路径
 4. `ACT`：进入"工作流"第一步并执行，不要停在确认状态
 
-For writing style, tone, and voice guidance, use `Skill(ce:writer)` with **The Engineer** persona.
+关于写作风格、语气与叙述口吻的指引，使用 `Skill(ce:writer)` 并选择 **The Engineer** 人格。
 
 ## 安全/逆向任务文档输出
 
@@ -87,22 +87,22 @@ For writing style, tone, and voice guidance, use `Skill(ce:writer)` with **The E
 
 ---
 
-## Core Principles
+## 核心原则
 
-### 1. Progressive Disclosure
+### 1. 渐进披露
 
-Reveal information in layers:
+按层展开信息：
 
-| Layer | Content | User Question |
+| 层级 | 内容 | 用户的问题 |
 |-------|---------|---------------|
-| 1 | One-sentence description | What is it? |
-| 2 | Quick start code block | How do I use it? |
-| 3 | Full API reference | What are my options? |
-| 4 | Architecture deep dive | How does it work? |
+| 1 | 一句话说明 | 它是什么？ |
+| 2 | 快速开始代码块 | 我该怎么用？ |
+| 3 | 完整 API 参考 | 我有哪些选项？ |
+| 4 | 架构深入剖析 | 它是如何工作的？ |
 
-**Warnings, breaking changes, and prerequisites go at the TOP.**
+**警告、破坏性变更与前置条件放在最顶部。**
 
-### 2. Task-Oriented Writing
+### 2. 面向任务写作
 
 ```markdown
 <!-- Bad: Feature-oriented -->
@@ -114,42 +114,42 @@ The AuthService class provides authentication methods...
 To authenticate a user, call login() with credentials:
 ```
 
-### 3. Show, Don't Tell
+### 3. 展示，而非讲述
 
-Every concept needs a concrete example.
+每个概念都需要一个具体示例。
 
-## Formatting Standards
+## 排版规范
 
-- **Sentence case headings**: "Getting started" not "Getting Started"
-- **Max 3 heading levels**: Deeper means split the doc
-- **Always specify language** in code blocks
-- **Relative paths** for internal links
-- **Tables** for structured data with 3+ attributes
+- **标题使用句首大写**：写 "Getting started"，不要写 "Getting Started"
+- **最多 3 级标题**：更深就意味着该拆分文档了
+- **代码块始终标注语言**
+- **内部链接使用相对路径**
+- **属性达到 3 个及以上的结构化数据用表格**
 
-## Quality Checklist
+## 质量检查清单
 
-- [ ] Code examples tested and runnable
-- [ ] No placeholder text or TODOs
-- [ ] Matches actual code behavior
-- [ ] Scannable without reading everything
-- [ ] Reader knows what to do next
+- [ ] 代码示例经过测试且可运行
+- [ ] 没有占位文本或 TODO
+- [ ] 与实际代码行为一致
+- [ ] 无需通读全文即可扫读定位
+- [ ] 读者知道下一步该做什么
 
-## Anti-Patterns
+## 反模式
 
-| Problem | Fix |
+| 问题 | 修正 |
 |---------|-----|
-| Wall of text | Break up with headings, bullets, code, tables |
-| Buried critical info | Warnings/breaking changes at TOP |
-| Missing error docs | Always document what can go wrong |
+| 大段文字墙 | 用标题、要点、代码、表格拆开 |
+| 关键信息被埋没 | 警告/破坏性变更放在最顶部 |
+| 缺少错误说明 | 始终说明可能出什么错 |
 
-## Templates
+## 模板
 
-For README, API endpoint, and file organization templates, see [references/templates.md](references/templates.md).
+README、API 端点与文件组织模板见 [references/templates.md](references/templates.md)。
 
-## Related Skills
+## 相关技能
 
-- `Skill(ce:writer)` - Writing style, tone, and voice (load The Engineer persona)
-- `Skill(ce:visualizing-with-mermaid)` - Architecture and flow diagrams
+- `Skill(ce:writer)` - 写作风格、语气与口吻（加载 The Engineer 人格）
+- `Skill(ce:visualizing-with-mermaid)` - 架构与流程图表
 
 
 ---

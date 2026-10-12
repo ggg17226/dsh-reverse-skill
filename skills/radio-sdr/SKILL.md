@@ -1,9 +1,9 @@
 ---
 name: radio-sdr
-description: Use for authorized RF/SDR security research including signal identification, replay feasibility study in shielded labs, and wireless protocol analysis outside classic Wi-Fi.
+description: 用于已授权的 RF/SDR 安全研究，涵盖信号识别、屏蔽实验室内的重放可行性研究，以及经典 Wi-Fi 之外的无线协议分析。
 ---
 
-# RF / SDR Security Research
+# RF / SDR 安全研究
 
 ## ACTION REQUIRED（读完后立刻执行）
 

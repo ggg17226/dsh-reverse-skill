@@ -1,9 +1,9 @@
 ---
 name: browser-extension-reverse
-description: Use for authorized reverse engineering of browser extensions (Chrome/Firefox) including manifest analysis, background workers, and extension-based credential or traffic logic recovery.
+description: 用于已授权的浏览器扩展（Chrome/Firefox）逆向工程，涵盖 manifest 分析、后台 worker，以及基于扩展的凭据或流量逻辑还原。
 ---
 
-# Browser Extension Reverse Engineering
+# 浏览器扩展逆向工程
 
 ## ACTION REQUIRED（读完后立刻执行）
 
@@ -35,7 +35,7 @@ description: Use for authorized reverse engineering of browser extensions (Chrom
 □ service_worker / background 入口
 □ content_script 注入点与世界（isolated）
 □ chrome.storage / IndexedDB 密钥
-□ 与 `js-reverse` 相同：Observe 网络与消息传递（runtime.sendMessage）
+□ 与 `js-reverse` 相同：观察网络与消息传递（runtime.sendMessage）
 ```
 
 ### 3. 动态

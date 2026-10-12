@@ -1,50 +1,50 @@
 ---
 name: competition-firmware-layout
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for firmware images, partition tables, boot chains, update packages, extracted filesystems, embedded configs, and device-facing trust boundaries. Use when the user asks to unpack firmware, map partition layout, inspect bootloader or init chains, recover update keys or credentials, trace config loading, or explain how a device surface reaches the decisive artifact. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向固件镜像、分区表、启动链、升级包、解出的文件系统、内嵌配置与面向设备的信任边界的 CTF 沙箱工作流。当用户要求解包固件、梳理分区布局、检查 bootloader 或 init 链、恢复升级密钥或凭据、追踪配置加载，或解释某个设备面如何到达决定性产物时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Firmware Layout
+# 竞赛固件布局
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is understanding how a firmware image is structured, booted, updated, and turned into reachable device behavior.
+当难点在于理解固件镜像如何组织、启动、升级，并最终转化为可达的设备行为时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Preserve the original image, extracted partitions, unpacked filesystems, and patched copies as separate artifacts.
-2. Map outer container, partition table, bootloader, kernel, rootfs, config, and update metadata before editing anything.
-3. Track the boot or update chain in order instead of jumping straight to the most interesting file.
-4. Record keys, signatures, offsets, partition boundaries, and init entrypoints in one compact evidence chain.
-5. Reproduce the decisive secret, branch, or reachable service from the smallest extracted path.
+1. 把原始镜像、解出的分区、解开文件系统与打过补丁的副本分别留存为独立产物。
+2. 在动手编辑之前，先梳理外层容器、分区表、bootloader、kernel、rootfs、配置与升级元数据。
+3. 按顺序追踪启动或升级链，不要一上来就跳到最有趣的那个文件。
+4. 用一条紧凑的证据链记录密钥、签名、偏移、分区边界与 init 入口点。
+5. 用最小解包路径复现出决定性的密钥、分支或可达服务。
 
-## Workflow
+## 工作流
 
-### 1. Establish Image Layout
+### 1. 建立镜像布局
 
-- Identify container type, partition headers, compression, filesystem type, and any appended or nested images.
-- Record offsets, sizes, hashes, mount points, and partition names before extraction mutates anything.
-- Separate bootloader, kernel, initramfs, rootfs, config blobs, and update metadata as different layers.
+- 识别容器类型、分区头、压缩方式、文件系统类型，以及任何尾部追加或嵌套的镜像。
+- 在解包改动任何内容之前，先记录偏移、大小、哈希、挂载点与分区名。
+- 把 bootloader、kernel、initramfs、rootfs、配置 blob 与升级元数据当作不同层分开处理。
 
-### 2. Trace Boot Or Update Flow
+### 2. 追踪启动或升级流程
 
-- Map how control moves from bootloader to kernel to init to services, or from update package to verifier to installer.
-- Note which credentials, certificates, passwords, seeds, or config files are consumed at each stage.
-- Distinguish checked-in firmware intent from the live behavior the extracted files actually support.
+- 梳理控制权如何从 bootloader 交给 kernel、再交给 init 与各服务；或从升级包交给校验器、再交给安装器。
+- 记录每个阶段会消费哪些凭据、证书、口令、种子或配置文件。
+- 把「签入的固件意图」与「解出文件实际支持的运行行为」区分开。
 
-### 3. Reduce To The Decisive Path
+### 3. 收敛到决定性路径
 
-- Show the smallest chain from image boundary to service exposure, auth bypass, debug interface, credential recovery, or flag artifact.
-- Keep extracted filesystems, derived configs, and patch experiments separate from pristine inputs.
-- If the challenge becomes mostly about native crash behavior or exploit primitives after extraction, switch back to the broader reverse skill.
+- 给出从镜像边界到服务暴露、认证绕过、调试接口、凭据恢复或 flag 产物的最小链条。
+- 把解出的文件系统、派生配置与补丁实验同原始输入分开保存。
+- 若解包之后题目主要变成 native 崩溃行为或利用原语，切回更通用的逆向技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/firmware-layout.md` for the layout checklist, boot-chain checklist, and evidence packaging.
+- 加载 `references/firmware-layout.md`，获取布局检查清单、启动链检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Partition offsets, hashes, filesystem types, mount paths, boot entrypoints, and update metadata
-- Extracted secrets, config paths, init scripts, service units, and credentials tied to the stage that consumes them
-- Original images, extracted layers, mounted views, and patched copies as separate artifacts
+- 分区偏移、哈希、文件系统类型、挂载路径、启动入口点与升级元数据
+- 解出的密钥、配置路径、init 脚本、service unit 与凭据，并对应到消费它们的阶段
+- 原始镜像、解出的各层、挂载视图与打过补丁的副本，分别作为独立产物保存

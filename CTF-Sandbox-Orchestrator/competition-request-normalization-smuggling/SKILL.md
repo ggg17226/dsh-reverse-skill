@@ -1,50 +1,50 @@
 ---
 name: competition-request-normalization-smuggling
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for parser differentials, HTTP normalization gaps, ambiguous headers, path decoding drift, transfer-framing mismatches, and request smuggling routes. Use when the user asks to trace proxy and backend parse differences, conflicting path normalization, Host or forwarded-header ambiguity, CL/TE issues, or routing outcomes that differ across hops. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向解析器差异、HTTP 归一化缺口、歧义头部、路径解码漂移、传输分帧不一致与请求走私路径的 CTF 沙箱工作流。当用户要求追踪代理与后端的解析差异、冲突的路径归一化、Host 或 forwarded 头歧义、CL/TE 问题，或跨跳路由结果不一致时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Request Normalization Smuggling
+# 竞赛请求归一化与走私
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when request interpretation changes between proxy, middleware, and backend parser layers.
+当请求的解释在代理、中间件与后端解析层之间发生改变时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Map every parsing hop: client-facing proxy, gateway, app server, and downstream service.
-2. Record path normalization, header canonicalization, transfer framing, and host derivation at each hop.
-3. Capture one accepted baseline request and one differential request with minimal delta.
-4. Prove which hop interprets the request differently.
-5. Reproduce one minimal differential path that yields decisive behavior.
+1. 梳理每一个解析跳：面向客户端的代理、网关、应用服务器与下游服务。
+2. 记录每一跳的路径归一化、头部规范化、传输分帧与 host 推导。
+3. 捕获一个被接受的基线请求与一个差异最小的差异化请求。
+4. 证明究竟是哪一跳对该请求的解释不同。
+5. 复现一条能产生决定性行为的最小差异路径。
 
-## Workflow
+## 工作流
 
-### 1. Map Parse And Routing Boundaries
+### 1. 梳理解析与路由边界
 
-- Record `Host`, forwarded headers, path decoding, slash collapsing, dot-segment handling, and case behavior.
-- Note `Content-Length`, `Transfer-Encoding`, chunk framing, and connection reuse behavior when relevant.
-- Keep edge parser and backend parser decisions side by side.
+- 记录 `Host`、forwarded 头、路径解码、斜杠折叠、点段（dot-segment）处理与大小写行为。
+- 相关时注明 `Content-Length`、`Transfer-Encoding`、chunk 分帧与连接复用行为。
+- 把边缘解析器与后端解析器的决策并排对照。
 
-### 2. Prove Differential Interpretation
+### 2. 证明差异化解释
 
-- Build paired requests that differ in one canonicalization dimension only.
-- Capture proxy logs, backend logs, route match, and downstream request shape.
-- Show where route, auth scope, or body boundary diverges.
+- 构造仅在某一个归一化维度上不同的成对请求。
+- 捕获代理日志、后端日志、路由匹配结果与下游请求形态。
+- 指出路由、认证作用域或请求体边界在何处发生分歧。
 
-### 3. Reduce To Decisive Smuggling Chain
+### 3. 收敛到决定性走私链
 
-- Compress to: crafted request -> parser differential across hops -> unintended routed request or hidden endpoint reach -> resulting effect.
-- State whether root cause is path normalization drift, header ambiguity, transfer framing differential, or host-derivation confusion.
-- If the chain becomes primarily runtime routing without framing tricks, hand off to runtime routing skill.
+- 压缩为：构造请求 → 跨跳解析器差异 → 非预期的被路由请求或隐藏端点可达 → 产生的效果。
+- 说明根因是路径归一化漂移、头部歧义、传输分帧差异，还是 host 推导混淆。
+- 若链条主要变成没有分帧技巧的运行时路由问题，交给 runtime routing 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/request-normalization-smuggling.md` for parse-differential checklist and evidence packaging.
+- 加载 `references/request-normalization-smuggling.md`，获取解析差异检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Raw request pairs, hop-by-hop interpretation, and final routed target
-- Exact normalization or framing delta that flips behavior
-- One minimal replayable differential request path
+- 原始请求对、逐跳解释结果与最终路由目标
+- 让行为翻转的确切归一化或分帧差异
+- 一条最小的可重放差异化请求路径

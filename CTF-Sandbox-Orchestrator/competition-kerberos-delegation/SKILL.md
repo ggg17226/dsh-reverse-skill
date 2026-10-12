@@ -1,47 +1,47 @@
 ---
 name: competition-kerberos-delegation
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for Kerberos delegation, SPN trust edges, S4U abuse, RBCD, constrained or unconstrained delegation, and service-ticket acceptance. Use when the user asks about constrained delegation, unconstrained delegation, RBCD, S4U, SPNs, ticket acceptance, or how a Kerberos trust edge turns into effective privilege under sandbox assumptions. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 Kerberos 委派、SPN 信任边界、S4U 滥用、RBCD、约束或非约束委派与服务票据接受的 CTF 沙箱工作流。当用户在沙箱假设下询问约束委派、非约束委派、RBCD、S4U、SPN、票据接受，或 Kerberos 信任边界如何转化为实际权限时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Kerberos Delegation
+# 竞赛 Kerberos 委派
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is not "is there Kerberos here," but which delegation edge exists, which ticket is being minted, and which service really accepts it.
+当难点不是「这里有没有 Kerberos」，而是存在哪条委派边界、正在签发哪种票据、以及哪个服务真正接受它时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Write the trust chain first: principal -> delegation edge -> ticket type -> target SPN -> accepting service -> resulting privilege.
-2. Separate ticket possession from accepted privilege.
-3. Keep SPNs, delegation mode, PAC/group data, encryption type, and service acceptance in one compact evidence block.
-4. Reproduce one minimal delegation chain before broadening into variants.
-5. Tie every privilege claim to a specific accepted ticket or service-side effect.
+1. 先写出信任链：主体 → 委派边界 → 票据类型 → 目标 SPN → 接受服务 → 得到的权限。
+2. 把「持有票据」与「权限被接受」区分开。
+3. 用同一个紧凑证据区块保留 SPN、委派模式、PAC/组数据、加密类型与服务接受情况。
+4. 在扩展到各种变体之前，先复现一条最小委派链。
+5. 让每一条权限主张都对应到某个被接受的票据或服务端效果。
 
-## Workflow
+## 工作流
 
-### 1. Identify The Delegation Edge
+### 1. 确定委派边界
 
-- Determine whether the path is constrained delegation, unconstrained delegation, resource-based constrained delegation, protocol transition, or another trust edge.
-- Inspect SPNs, ACLs, service accounts, SIDHistory, certificate templates, and replication rights only when they affect the active path.
+- 判断该路径是约束委派、非约束委派、基于资源的约束委派（RBCD）、协议转换（protocol transition），还是其他信任边界。
+- 只有当 SPN、ACL、服务账号、SIDHistory、证书模板与复制权限会影响当前路径时，才去检查它们。
 
-### 2. Trace Ticket Minting And Acceptance
+### 2. 追踪票据签发与接受
 
-- Record TGT/TGS type, S4U steps when relevant, delegation flags, PAC or group data, encryption type, cache location, and target SPN.
-- Prove which service actually accepts the ticket and what capability appears after acceptance.
+- 记录 TGT/TGS 类型、相关时的 S4U 步骤、委派标志、PAC 或组数据、加密类型、缓存位置与目标 SPN。
+- 证明究竟是哪个服务接受了该票据，以及接受之后出现了什么能力。
 
-### 3. Report The Effective Edge
+### 3. 报告实际生效的边界
 
-- Compress the chain into one replayable path, not a vague "domain compromise" statement.
-- Separate candidate edges from the edge that really lands privilege.
+- 把链条压缩为一条可复现路径，而不是含糊地说「域已沦陷」。
+- 把候选边界与真正落地权限的那条边界区分开。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/kerberos-delegation.md` for the delegation checklist, ticket fields to preserve, and common proof mistakes.
+- 加载 `references/kerberos-delegation.md`，获取委派检查清单、需要保留的票据字段与常见证明误区。
 
-## What To Preserve
+## 需要保留的内容
 
-- SPN, ticket type, delegation mode, PAC/group data, encryption type, cache location, accepting service
-- Service-side logs, event IDs, logon session changes, or group changes proving effective privilege
-- The exact trust edge that makes the ticket replayable
+- SPN、票据类型、委派模式、PAC/组数据、加密类型、缓存位置、接受服务
+- 能证明权限实际生效的服务端日志、事件 ID、登录会话变化或组成员变化
+- 让该票据可被重放的确切信任边界

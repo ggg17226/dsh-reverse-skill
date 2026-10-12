@@ -1,48 +1,48 @@
 ---
 name: competition-supply-chain
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for CI/CD, registry, dependency drift, artifact provenance, image build, release pipeline, and runtime consumer challenges. Use when the user asks to trace dependency drift, registry pulls, malicious packages, build or release tampering, CI execution, artifact signing, or which shipped artifact the runtime actually consumes. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 CI/CD、镜像仓库、依赖漂移、产物来源（provenance）、镜像构建、发布流水线与运行时消费方类题目的 CTF 沙箱工作流。当用户要求追踪依赖漂移、镜像仓库拉取、恶意包、构建或发布环节被篡改、CI 执行、产物签名，或运行时实际消费了哪个交付产物时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Supply Chain
+# 竞赛供应链
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the challenge is really about provenance, dependency drift, build output, release flow, or what runtime artifact actually got shipped.
+当题目实质关乎来源、依赖漂移、构建输出、发布流程，或运行时实际交付了哪个产物时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Split the problem into source, dependency resolution, build, packaging, publish, and runtime consumption.
-2. Decide where the first divergence occurs between intended artifact and runtime artifact.
-3. Keep provenance as a compact chain, not a scattered set of observations.
-4. Reproduce the smallest possible build or package path that still shows the issue.
-5. Separate checked-in intent from what the pipeline actually emitted.
+1. 把问题拆成：源码、依赖解析、构建、打包、发布与运行时消费。
+2. 判断「预期产物」与「运行时产物」最早在哪里发生分歧。
+3. 把来源整理为一条紧凑的链，而不是零散的观察集合。
+4. 复现仍能展示该问题的、尽可能小的构建或打包路径。
+5. 把签入的意图与流水线实际产出的内容分开。
 
-## Workflow
+## 工作流
 
-### 1. Trace Provenance End-To-End
+### 1. 端到端追踪来源
 
-- Map source checkout, lockfiles, dependency fetch, pre/post-install steps, build scripts, packaging, publish target, and runtime consumer.
-- Compare declared version, resolved version, and shipped artifact.
-- Note registry, cache, mirror, or CI environment differences.
+- 映射源码检出、lockfile、依赖拉取、安装前/后步骤、构建脚本、打包、发布目标与运行时消费方。
+- 比较声明的版本、解析出的版本与实际交付的产物。
+- 注明 registry、缓存、镜像源或 CI 环境的差异。
 
-### 2. Reconcile Build-Time And Runtime
+### 2. 对齐构建期与运行期
 
-- Compare manifests with image layers, mounted secrets, generated files, and runtime hooks.
-- Identify whether the decisive mutation happens in dependency install, build step, publish step, or runtime bootstrap.
+- 把清单与镜像层、被挂载的密钥、生成的文件与运行时钩子对照。
+- 判断决定性的改动发生在依赖安装、构建步骤、发布步骤，还是运行时启动引导阶段。
 
-### 3. Report The Break Point
+### 3. 报告断点
 
-- State the earliest point where provenance diverges.
-- Keep evidence in one short chain from source to runtime consumer.
+- 指出来源最早出现分歧的位置。
+- 用一条从源码到运行时消费方的短链保留证据。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/supply-chain.md` for the provenance checklist, evidence packaging, and common pipeline failure modes.
+- 加载 `references/supply-chain.md`，获取来源检查清单、证据打包方式与常见流水线失败模式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Declared dependency, resolved dependency, and runtime artifact versions
-- CI step names, registry pulls, artifact hashes, and image or package layers
-- The runtime consumer that actually accepts or executes the artifact
+- 声明的依赖、解析出的依赖与运行时产物的版本
+- CI 步骤名称、镜像仓库拉取、产物哈希与镜像或包的各层
+- 实际接受或执行该产物的运行时消费方

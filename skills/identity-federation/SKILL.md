@@ -1,9 +1,9 @@
 ---
 name: identity-federation
-description: Use for authorized assessment of federated identity systems including SAML, OIDC, OAuth2 flows, SSO misconfiguration, and token confusion issues.
+description: 用于已授权的联邦身份系统评估，涵盖 SAML、OIDC、OAuth2 流程、SSO 配置错误与令牌混淆问题。
 ---
 
-# Identity Federation (SAML / OIDC / OAuth)
+# 联邦身份（SAML / OIDC / OAuth）
 
 ## ACTION REQUIRED（读完后立刻执行）
 

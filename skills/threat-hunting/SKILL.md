@@ -1,9 +1,9 @@
 ---
 name: threat-hunting
-description: Use for blue-team threat hunting, detection engineering with Sigma/YARA, SIEM query design, and incident detection validation.
+description: 用于蓝队威胁狩猎、基于 Sigma/YARA 的检测工程、SIEM 查询设计与入侵检测有效性验证。
 ---
 
-# Threat Hunting & Detection Engineering
+# 威胁狩猎与检测工程
 
 ## ACTION REQUIRED（读完后立刻执行）
 

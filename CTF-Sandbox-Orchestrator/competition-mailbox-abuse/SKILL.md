@@ -1,50 +1,50 @@
 ---
 name: competition-mailbox-abuse
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for enterprise mail abuse, OAuth consent, inbox or forwarding rules, transport rules, shared mailbox access, phishing chains, and token-to-mailbox side effects. Use when the user asks to trace mailbox rules, OAuth consent grants, forwarding or delegate abuse, shared mailbox access, message-trace evidence, or explain how mail artifacts turn into persistence, exfiltration, or privilege. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向企业邮件滥用、OAuth 授权同意、收件箱或转发规则、传输规则、共享邮箱访问、钓鱼链与「令牌到邮箱」副作用的 CTF 沙箱工作流。当用户要求追踪邮箱规则、OAuth 授权同意授予、转发或代理滥用、共享邮箱访问、邮件跟踪证据，或解释邮件产物如何转化为持久化、外传或权限时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Mailbox Abuse
+# 竞赛邮箱滥用
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive path runs through mailbox behavior, consent flow, or message-routing effects rather than generic AD evidence alone.
+当决定性路径要穿过邮箱行为、授权同意流程或邮件路由效果，而不只是通用 AD 证据时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Decide whether the active path is phishing-to-consent, token-to-mailbox, rule-based persistence, or transport-level mail rerouting.
-2. Keep mailbox evidence, identity evidence, and message-trace evidence tied to the same user, mailbox, token, or message ID.
-3. Separate possession of a token or delegate edge from the actual mailbox effect it enables.
-4. Record forwarding targets, rule predicates, consent scopes, shared mailbox edges, and resulting mail flow in compact blocks.
-5. Reproduce the smallest mail effect that proves persistence, exfiltration, or privilege.
+1. 判断当前路径属于「钓鱼到授权同意」「令牌到邮箱」「基于规则的持久化」，还是「传输层邮件改道」。
+2. 让邮箱证据、身份证据与邮件跟踪证据都对应到同一个用户、邮箱、令牌或消息 ID。
+3. 把「持有令牌或代理边界」与「它实际带来的邮箱效果」区分开。
+4. 用紧凑区块记录转发目标、规则谓词、授权同意 scope、共享邮箱边界与由此产生的邮件流。
+5. 复现能证明持久化、外传或权限的最小邮件效果。
 
-## Workflow
+## 工作流
 
-### 1. Map The Mail Trust Path
+### 1. 梳理邮件信任路径
 
-- Identify the principal, mailbox, token or session, consent grant, delegate edge, shared mailbox relationship, or app registration involved.
-- Record consent scopes, mailbox permissions, rule ownership, transport actions, and message-trace identifiers.
-- Distinguish client-visible symptoms from server-side mailbox or transport state.
+- 识别涉及的主体、邮箱、令牌或会话、授权同意授予、代理边界、共享邮箱关系或应用注册。
+- 记录授权同意 scope、邮箱权限、规则归属、传输动作与邮件跟踪标识。
+- 把客户端可见的症状与服务端的邮箱或传输状态区分开。
 
-### 2. Prove The Mailbox Effect
+### 2. 证明邮箱效果
 
-- Correlate consent logs, sign-ins, message traces, inbox rules, transport rules, forwarding settings, and mailbox audit events.
-- Show which rule or token produces which concrete effect: silent forwarding, marking read, deletion, delegate access, or message rerouting.
-- Keep message IDs, sender or recipient pairs, and timestamps aligned across logs.
+- 关联授权同意日志、登录记录、邮件跟踪、收件箱规则、传输规则、转发设置与邮箱审计事件。
+- 说明哪条规则或哪个令牌产生了哪个具体效果：静默转发、标记为已读、删除、代理访问或邮件改道。
+- 让消息 ID、收发件人对与时间戳在各日志之间保持一致。
 
-### 3. Reduce To The Decisive Abuse Chain
+### 3. 收敛到决定性滥用链
 
-- Compress the path to the smallest sequence: lure or grant -> token or delegate edge -> mailbox or transport mutation -> resulting mail effect.
-- State clearly whether persistence lives in consent, mailbox rules, transport config, or shared mailbox permissions.
-- If the task broadens into host pivots or Kerberos acceptance, switch back to the broader identity skill.
+- 把路径压缩为最小序列：诱饵或授权授予 → 令牌或代理边界 → 邮箱或传输被改动 → 产生的邮件效果。
+- 明确说明持久化位于授权同意、邮箱规则、传输配置，还是共享邮箱权限。
+- 若任务扩展到主机跳板或 Kerberos 接受，切回更通用的身份技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/mailbox-abuse.md` for the consent checklist, rule checklist, and evidence packaging.
+- 加载 `references/mailbox-abuse.md`，获取授权同意检查清单、规则检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Consent scopes, token claims, mailbox permissions, rule definitions, forwarding targets, and message IDs
-- Message-trace lines, audit events, and mailbox effects tied to the same mail path
-- The smallest replayable sequence that proves persistence, exfiltration, or delegate access
+- 授权同意 scope、令牌声明、邮箱权限、规则定义、转发目标与消息 ID
+- 邮件跟踪记录、审计事件，以及与同一条邮件路径对应的邮箱效果
+- 能证明持久化、外传或代理访问的最小可重放序列

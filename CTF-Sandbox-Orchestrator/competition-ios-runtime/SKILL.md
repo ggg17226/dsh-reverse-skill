@@ -1,50 +1,50 @@
 ---
 name: competition-ios-runtime
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for IPA runtime analysis, Frida hooks, Objective-C or Swift method tracing, Keychain inspection, SSL pinning bypass, URL scheme handling, and iOS request-signing recovery. Use when the user asks to hook an IPA, trace Objective-C or Swift runtime behavior, inspect Keychain or plist state, bypass pinning, analyze deeplinks or universal links, or replay accepted iOS requests. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 IPA 运行时分析、Frida Hook、Objective-C 或 Swift 方法跟踪、Keychain 检查、SSL Pinning 绕过、URL Scheme 处理与 iOS 请求签名还原的 CTF 沙箱工作流。当用户要求 Hook 某个 IPA、跟踪 Objective-C 或 Swift 运行时行为、检查 Keychain 或 plist 状态、绕过 Pinning、分析 deeplink 或 universal link，或重放被接受的 iOS 请求时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition iOS Runtime
+# 竞赛 iOS 运行时
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive path runs through live iOS trust boundaries rather than static strings or plist values alone.
+当决定性路径需要穿过实时的 iOS 信任边界、而仅靠静态字符串或 plist 值无法解决时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Preserve the original IPA, extracted bundle, and any decrypted or re-signed copy as separate artifacts.
-2. Start with `Info.plist`, entitlements, URL schemes, frameworks, Keychain usage, and local app storage before broad runtime hooks.
-3. Choose the narrowest runtime boundary that proves behavior: signer, trust evaluator, Keychain accessor, Objective-C or Swift method, or network request builder.
-4. Correlate static bundle evidence and live hook output before claiming the trust path is understood.
-5. Reproduce the accepted request, token, or gated branch from the smallest hook set.
+1. 把原始 IPA、解出的 bundle，以及任何解密或重签名后的副本分别留存为独立产物。
+2. 在开展大范围运行时 Hook 之前，先从 `Info.plist`、entitlements、URL scheme、framework、Keychain 使用情况与本地应用存储入手。
+3. 选择能证明该行为的最窄运行时边界：签名器、信任评估器、Keychain 访问处、Objective-C 或 Swift 方法，或网络请求构造器。
+4. 在声称已理解该信任路径之前，先让静态 bundle 证据与实时 Hook 输出相互印证。
+5. 用最小的 Hook 集合复现出被接受的请求、令牌或被门控的分支。
 
-## Workflow
+## 工作流
 
-### 1. Static iOS Triage
+### 1. iOS 静态排查
 
-- Map bundle structure, `Info.plist`, entitlements, URL schemes, universal links, embedded frameworks, and app group paths.
-- Record likely trust boundaries: request signers, device binding, certificate checks, jailbreak checks, Keychain access, or local cache loading.
-- Note whether sensitive logic sits in Objective-C, Swift, embedded frameworks, or a bundled web surface.
+- 梳理 bundle 结构、`Info.plist`、entitlements、URL scheme、universal link、内嵌 framework 与 app group 路径。
+- 记录可能的信任边界：请求签名器、设备绑定、证书校验、越狱检测、Keychain 访问或本地缓存加载。
+- 注明敏感逻辑位于 Objective-C、Swift、内嵌 framework，还是随包的 Web 页面中。
 
-### 2. Hook The Runtime Boundary
+### 2. Hook 运行时边界
 
-- Prefer hooking request builders, crypto helpers, trust evaluators, Keychain reads, or Objective-C selectors instead of broad UI handlers.
-- Record plaintext inputs, headers, nonces, signed strings, and outputs at the boundary that changes server acceptance.
-- Patch or bypass pinning or environment checks only enough to expose the real request path.
+- 优先 Hook 请求构造器、加密辅助函数、信任评估器、Keychain 读取或 Objective-C selector，而不是大范围的 UI 处理器。
+- 在会改变服务端接受结果的那个边界上，记录明文输入、请求头、nonce、签名字符串与输出。
+- 只做刚好足以暴露真实请求路径的 Pinning 或环境检测补丁与绕过。
 
-### 3. Replay The Accepted Path
+### 3. 重放被接受的路径
 
-- Rebuild the smallest stateful sequence: local token, device identifier, request body, signature, headers, and trust checks.
-- Keep hook logs, bundle paths, plist keys, and local storage artifacts tied to the same session or account state.
-- If the task becomes mostly about transform recovery instead of iOS runtime, switch back to the broader crypto or mobile skill.
+- 重建最小的有状态序列：本地令牌、设备标识、请求体、签名、请求头与信任校验。
+- 让 Hook 日志、bundle 路径、plist 键与本地存储产物都对应到同一个会话或账号状态。
+- 若任务主要转向变换算法还原而非 iOS 运行时，切回更通用的密码学或移动端技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/ios-runtime.md` for hook targets, storage checklist, and evidence packaging.
+- 加载 `references/ios-runtime.md`，获取 Hook 目标、存储检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Bundle paths, entitlements, plist keys, selectors, class names, hook points, and header names
-- Keychain items, local DB or plist paths, URL schemes, and app-group storage locations
-- The smallest replayable request or branch that proves the iOS trust boundary
+- Bundle 路径、entitlements、plist 键、selector、类名、Hook 点与请求头名称
+- Keychain 条目、本地数据库或 plist 路径、URL scheme 与 app group 存储位置
+- 能证明该 iOS 信任边界的最小可重放请求或分支

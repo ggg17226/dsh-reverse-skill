@@ -1,51 +1,51 @@
 ---
 name: competition-k8s-control-plane
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for Kubernetes API analysis, service-account trust, RBAC edges, admission and controller behavior, cluster secrets, workload mutation, and namespace-scoped drift. Use when the user asks to inspect kube API permissions, service-account tokens, RoleBinding or ClusterRoleBinding edges, admission webhooks, controller-created pods, secret exposure, or why live workloads differ from manifests. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 Kubernetes API 分析、服务账号信任、RBAC 边界、准入与控制器行为、集群密钥、工作负载变更与命名空间范围内的漂移的 CTF 沙箱工作流。当用户要求检查 kube API 权限、服务账号令牌、RoleBinding 或 ClusterRoleBinding 边界、准入 webhook、控制器创建的 pod、密钥暴露，或解释实时工作负载为何与清单不一致时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition K8s Control Plane
+# 竞赛 K8s 控制面
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive path runs through Kubernetes control-plane state, API permissions, or controller behavior rather than a single container's runtime alone.
+当决定性路径要穿过 Kubernetes 控制面状态、API 权限或控制器行为，而不只是单个容器的运行时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Separate manifest intent from live cluster state: API objects, mutations, controllers, secrets, and resulting workloads.
-2. Identify the active principal first: service account, kubeconfig identity, node credential, webhook, or controller.
-3. Map the smallest control-plane edge to its workload effect.
-4. Keep RBAC, service accounts, owner references, namespace boundaries, and secret consumers in compact evidence blocks.
-5. Reproduce the smallest cluster action that yields the decisive workload or secret effect.
+1. 把清单意图与实时集群状态分开：API 对象、变更、控制器、密钥与最终工作负载。
+2. 先确定当前生效的主体：服务账号、kubeconfig 身份、节点凭据、webhook 还是控制器。
+3. 梳理从最小控制面边界到其工作负载效果的关系。
+4. 用紧凑的证据区块保留 RBAC、服务账号、owner reference、命名空间边界与密钥消费方。
+5. 复现能产生决定性工作负载或密钥效果的最小集群操作。
 
-## Workflow
+## 工作流
 
-### 1. Map The API Trust Path
+### 1. 梳理 API 信任路径
 
-- Record namespaces, service accounts, Roles, ClusterRoles, bindings, admission hooks, controllers, and the resources they can mutate.
-- Distinguish read access, create access, patch access, exec access, and secret access.
-- Keep principal, verb, resource, namespace, and resulting object in one chain.
+- 记录 namespace、服务账号、Role、ClusterRole、绑定、准入钩子、控制器，以及它们能够改动的资源。
+- 区分读取权限、创建权限、patch 权限、exec 权限与密钥访问权限。
+- 让主体、verb、资源、namespace 与最终对象保持一一对应。
 
-### 2. Trace Mutation To Workload State
+### 2. 追踪从变更到工作负载状态
 
-- Show how an API action becomes a pod, volume mount, secret exposure, env injection, job run, or controller-created artifact.
-- Compare checked-in YAML against live objects after defaulting, admission mutation, or controller reconciliation.
-- Distinguish pod-runtime behavior from cluster-level mutation logic.
+- 说明一个 API 动作如何变成 pod、卷挂载、密钥暴露、环境变量注入、job 运行或控制器创建的产物。
+- 把签入的 YAML 与经过默认值填充、准入变更或控制器协调之后的实时对象对照。
+- 把「pod 运行时行为」与「集群级变更逻辑」区分开。
 
-### 3. Reduce To The Decisive Cluster Path
+### 3. 收敛到决定性集群路径
 
-- Compress the result to the smallest chain: principal -> API permission -> mutated object -> resulting workload, secret, or route effect.
-- Keep kube objects, live describes, and consumed secret or config paths tied to the same namespace and controller.
-- If the problem narrows down to one container's mount or runtime deviation, switch back to the tighter container-runtime skill.
+- 把结论压缩为最小链条：主体 → API 权限 → 被改动的对象 → 由此产生的工作负载、密钥或路由效果。
+- 让 kube 对象、实时 describe 输出与被消费的密钥或配置路径都对应到同一个 namespace 与控制器。
+- 若问题收窄为某一个容器的挂载或运行时偏差，切回更贴合的 container-runtime 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/k8s-control-plane.md` for the RBAC checklist, controller checklist, and evidence packaging.
-- If the hard part is metadata-service reachability, workload identity, instance credentials, or metadata-derived privilege, prefer `$competition-cloud-metadata-path`.
+- 加载 `references/k8s-control-plane.md`，获取 RBAC 检查清单、控制器检查清单与证据打包方式。
+- 若难点在于元数据服务可达性、工作负载身份、实例凭据或元数据派生权限，优先用 `$competition-cloud-metadata-path`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Namespace, service account, verb, resource kind, RoleBinding or ClusterRoleBinding, and owner reference chains
-- Admission mutations, generated workloads, mounted secrets, and controller-produced drift
-- The exact API action or object diff that creates the decisive effect
+- Namespace、服务账号、verb、资源类型、RoleBinding 或 ClusterRoleBinding，以及 owner reference 链
+- 准入变更、生成的工作负载、被挂载的密钥与控制器造成的漂移
+- 能产生决定性效果的确切 API 动作或对象差异

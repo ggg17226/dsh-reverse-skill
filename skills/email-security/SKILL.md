@@ -1,9 +1,9 @@
 ---
 name: email-security
-description: Use for authorized email security review including phishing analysis, header authentication (SPF/DKIM/DMARC), BEC patterns, and mailbox token abuse research.
+description: 用于已授权的邮件安全审查，涵盖钓鱼分析、头部认证（SPF/DKIM/DMARC）、BEC 模式与邮箱令牌滥用研究。
 ---
 
-# Email Security & Phishing Analysis
+# 邮件安全与钓鱼分析
 
 ## ACTION REQUIRED（读完后立刻执行）
 

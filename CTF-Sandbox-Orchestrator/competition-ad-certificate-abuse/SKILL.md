@@ -1,50 +1,50 @@
 ---
 name: competition-ad-certificate-abuse
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for AD CS, certificate templates, enrollment rights, EKUs, SAN controls, PKINIT, certificate mapping, and cert-based privilege paths. Use when the user asks about ESC-style abuse, certificate templates, enrollment agents, EKUs, SAN or subject controls, smartcard or PKINIT logon, CA policy, or how an issued cert turns into accepted privilege. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 AD CS、证书模板、注册权限（enrollment rights）、EKU、SAN 控制、PKINIT、证书映射与基于证书的权限路径的 CTF 沙箱工作流。当用户询问 ESC 类滥用、证书模板、注册代理（enrollment agent）、EKU、SAN 或主体控制、智能卡或 PKINIT 登录、CA 策略，或签发的证书如何转化为被接受的权限时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition AD Certificate Abuse
+# 竞赛 AD 证书滥用
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive identity edge is certificate-based and the hard part is proving how a template or CA policy turns into accepted privilege.
+当决定性的身份边界基于证书、且难点在于证明某个模板或 CA 策略如何转化为被接受的权限时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Identify the CA, template, enrolling principal, and accepting service before diving into every certificate detail.
-2. Separate template enrollability from cert-based authentication or privilege acceptance.
-3. Record EKUs, subject or SAN controls, issuance requirements, enrollment rights, and mapping behavior in compact blocks.
-4. Tie the issued cert to one accepted path: PKINIT, Schannel, LDAPS, WinRM, or another mapped service.
-5. Reproduce the smallest certificate issuance-to-acceptance chain that yields the decisive privilege.
+1. 先确定 CA、模板、注册主体与接受服务，再深入每一项证书细节。
+2. 把「模板是否可注册」与「证书能否用于认证或权限接受」分开处理。
+3. 用紧凑区块记录 EKU、主体或 SAN 控制、签发要求、注册权限与映射行为。
+4. 把签发出来的证书绑定到一条被接受的路径：PKINIT、Schannel、LDAPS、WinRM 或其他已映射的服务。
+5. 复现能产生决定性权限的最小「签发 → 接受」链条。
 
-## Workflow
+## 工作流
 
-### 1. Map CA And Template Trust
+### 1. 梳理 CA 与模板信任关系
 
-- Record CA configuration, template name, enrollment permissions, manager approval, authorized signatures, EKUs, subject requirements, and SAN behavior.
-- Note whether the path depends on alternate subject names, `UPN`, DNS names, enrollment agent behavior, or template supersedence.
-- Keep principal, template, and issuance policy tied together.
+- 记录 CA 配置、模板名称、注册权限、管理员批准、授权签名、EKU、主体要求与 SAN 行为。
+- 注明该路径是否依赖备用主体名（alternate subject name）、`UPN`、DNS 名、注册代理行为或模板取代（supersedence）。
+- 让主体、模板与签发策略保持一一对应。
 
-### 2. Prove Cert-To-Privilege Acceptance
+### 2. 证明证书到权限的接受路径
 
-- Show how the issued certificate is mapped or accepted: PKINIT, smartcard logon, Schannel auth, service mapping, or explicit certificate mapping.
-- Record serial, subject, SAN, EKU, validity, and the exact service or domain edge that accepts it.
-- Distinguish certificate issuance from the separate step where privilege is actually granted.
+- 说明签发的证书是如何被映射或接受的：PKINIT、智能卡登录、Schannel 认证、服务映射或显式证书映射。
+- 记录序列号、主体、SAN、EKU、有效期，以及接受它的确切服务或域边界。
+- 把「证书签发」与「权限实际授予」这两个独立步骤区分开。
 
-### 3. Reduce To The Decisive Abuse Chain
+### 3. 收敛到决定性滥用链
 
-- Compress the path to the smallest sequence: enrollment right or misconfig -> issued cert -> accepted mapping -> resulting privilege.
-- State clearly whether the weakness lives in template config, CA policy, mapping logic, relay path, or enrollment rights.
-- If the task is really about delegation or ticket transformation after PKINIT, switch back to the tighter Kerberos skill.
+- 把路径压缩为最小序列：注册权限或配置错误 → 签发证书 → 映射被接受 → 得到权限。
+- 明确说明弱点位于模板配置、CA 策略、映射逻辑、中继路径还是注册权限。
+- 若任务实质是 PKINIT 之后的委派或票据变换，切回更贴合的 Kerberos 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/ad-certificate-abuse.md` for the AD CS checklist, template checklist, and evidence packaging.
+- 加载 `references/ad-certificate-abuse.md`，获取 AD CS 检查清单、模板检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- CA names, template names, rights, EKUs, issuance flags, SAN controls, and mapping details
-- Issued certificate fields, serials, subjects, SANs, and the accepting service or logon path
-- The smallest reproducible enrollment-to-privilege chain
+- CA 名称、模板名称、权限、EKU、签发标志、SAN 控制与映射细节
+- 签发证书的字段、序列号、主体、SAN，以及接受它的服务或登录路径
+- 最小的可复现「注册 → 权限」链

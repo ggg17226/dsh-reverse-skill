@@ -1,50 +1,50 @@
 ---
 name: competition-file-parser-chain
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for file uploads, imports, previews, archive extraction, format conversion, parser invocation, and deserialization chains. Use when the user asks to inspect an upload or import path, trace archive extraction, preview or converter behavior, explain how a file reaches a parser or deserializer, or connect one uploaded artifact to the decisive backend effect. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向文件上传、导入、预览、压缩包解压、格式转换、解析器调用与反序列化链的 CTF 沙箱工作流。当用户要求检查上传或导入路径、追踪压缩包解压过程、分析预览或转换器行为、解释文件如何到达解析器或反序列化器，或把某个上传产物与决定性的后端效果关联起来时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition File Parser Chain
+# 竞赛文件解析链
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is following a file from ingress through every parser, extractor, converter, or deserializer boundary that matters.
+当难点在于跟踪一个文件从入口开始、穿过每一个关键解析器、解压器、转换器或反序列化边界时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Preserve the original upload and every derived artifact separately.
-2. Map the chain in order: ingress, temp storage, archive extraction, format conversion, parser call, deserialization, and final consumer.
-3. Record filenames, MIME guesses, extensions, temp paths, and parser choices before mutating anything.
-4. Separate client-visible validation from backend parser behavior.
-5. Reproduce the smallest file-processing chain that yields the decisive branch or artifact.
+1. 分别留存原始上传文件与每一个派生产物。
+2. 按顺序梳理链路：入口、临时存储、压缩包解压、格式转换、解析器调用、反序列化与最终消费方。
+3. 在改动任何内容之前，先记录文件名、MIME 猜测、扩展名、临时路径与解析器选择。
+4. 把「客户端可见的校验」与「后端解析器行为」区分开。
+5. 复现能产生决定性分支或产物的最小文件处理链。
 
-## Workflow
+## 工作流
 
-### 1. Map File Ingress And Derivation
+### 1. 梳理文件入口与派生
 
-- Record request shape, multipart names, content type, filename, temp paths, upload staging, and storage keys.
-- Note every derived artifact: extracted archive member, converted preview, generated thumbnail, temp document, or deserialized object.
-- Keep original file and each derivative labeled separately.
+- 记录请求形态、multipart 字段名、Content-Type、文件名、临时路径、上传暂存位置与存储键。
+- 记录每一个派生产物：解出的压缩包成员、转换后的预览、生成的缩略图、临时文档或反序列化对象。
+- 保持原始文件与每个派生文件分别标注。
 
-### 2. Trace Parser And Conversion Boundaries
+### 2. 追踪解析与转换边界
 
-- Show which parser, converter, extractor, or deserializer runs at each step.
-- Record parser-specific decisions driven by extension, MIME, magic bytes, schema, archive member names, or embedded metadata.
-- Distinguish parsing success, preview success, conversion success, and business-logic acceptance.
+- 说明每一步实际运行的是哪个解析器、转换器、解包器或反序列化器。
+- 记录由扩展名、MIME、magic bytes、schema、压缩包成员名或内嵌元数据驱动的解析器特有决策。
+- 把「解析成功」「预览成功」「转换成功」与「业务逻辑接受」区分开。
 
-### 3. Reduce To The Decisive File Chain
+### 3. 收敛到决定性文件链
 
-- Compress the result to the smallest sequence: upload -> derived artifact -> parser boundary -> resulting effect.
-- State clearly whether the decisive weakness lives in archive handling, MIME inference, file conversion, path resolution, or deserialization.
-- If the chain becomes mostly a generic async worker problem after enqueue, hand off to the tighter queue or worker skill.
+- 把结论压缩为最小序列：上传 → 派生产物 → 解析器边界 → 产生的效果。
+- 明确说明决定性弱点位于压缩包处理、MIME 推断、文件转换、路径解析，还是反序列化。
+- 若入队之后的链条主要变成通用异步 worker 问题，交给更贴合的队列或 worker 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/file-parser-chain.md` for the ingress checklist, parser checklist, and evidence packaging.
+- 加载 `references/file-parser-chain.md`，获取入口检查清单、解析器检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Original uploads, derived files, temp paths, storage keys, parser names, and conversion steps
-- The exact boundary where backend behavior diverges from user-visible validation
-- One minimal replayable file-processing sequence that reaches the decisive effect
+- 原始上传、派生文件、临时路径、存储键、解析器名称与转换步骤
+- 后端行为与用户可见校验发生分歧的确切边界
+- 一条能到达决定性效果的最小可重放文件处理序列

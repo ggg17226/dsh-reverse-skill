@@ -7,7 +7,7 @@ description: |
   触发关键词：符号迁移、bindiff、跨版本、PDB 缺失、函数偏移迁移、symbol migration、binary diff、版本对比。
 ---
 
-# 跨版本符号迁移 (Binary Diff)
+# 跨版本符号迁移
 
 ## ACTION REQUIRED（读完后立刻执行）
 
@@ -70,47 +70,47 @@ description: |
 ### 标准比对 Prompt
 
 ```text
-I have disassembly outputs and procedure code of the same function.
+下面是同一个函数的两份反汇编输出与伪代码。
 
-This is the function for reference:
+这是用于参照的函数：
 
-**Disassembly for Reference**
+**参照用的反汇编**
 ```c
 {disasm_for_reference}
 ```
 
-**Procedure code for Reference**
+**参照用的伪代码**
 ```c
 {procedure_for_reference}
 ```
 
-This is the function you need to reverse-engineering:
+这是你需要逆向的函数：
 
-**Disassembly to reverse-engineering**
+**待逆向的反汇编**
 ```c
 {disasm_code}
 ```
 
-**Procedure code to reverse-engineering**
+**待逆向的伪代码**
 ```c
 {procedure}
 ```
 
-What you need to do is to collect all references to "{symbol_name_list}" in the function you need to reverse-engineering and output those references as YAML.
+你需要做的是：在待逆向的函数中收集对 "{symbol_name_list}" 的全部引用，并把这些引用以 YAML 形式输出。
 
-Example:
+示例：
 ```yaml
-found_vcall: # This is for indirect call to virtual function or virtual function pointer fetching.
-  - insn_va: '0x180777700' # Always be the instruction with displacement offset
-    insn_disasm: call [rax+68h] # Always be the instruction with displacement offset
+found_vcall: # 虚函数调用，或虚函数指针取址
+  - insn_va: '0x180777700' # 始终是带位移偏移的那条指令
+    insn_disasm: call [rax+68h] # 始终是带位移偏移的那条指令
     vfunc_offset: '0x68'
     func_name: ILoopMode_OnLoopActivate
-  - insn_va: '0x180777778' # Always be the instruction with displacement offset
-    insn_disasm: mov rax, [rax+80h] # Always be the instruction with displacement offset
+  - insn_va: '0x180777778' # 始终是带位移偏移的那条指令
+    insn_disasm: mov rax, [rax+80h] # 始终是带位移偏移的那条指令
     vfunc_offset: '0x80'
     func_name: INetworkMessages_GetNetworkGroupCount
 
-found_call: # This is for direct call to non-virtual regular function.
+found_call: # 对非虚普通函数的直接调用
   - insn_va: '0x180888800'
     insn_disasm: call sub_180999900
     func_name: CLoopMode_RegisterEventMapInternal
@@ -118,29 +118,29 @@ found_call: # This is for direct call to non-virtual regular function.
     insn_disasm: call sub_180555500
     func_name: CLoopMode_SetSystemState
 
-found_funcptr: # This is for non-virtual regular function pointer.
-  - insn_va: '0x180666600' # Must load/reference the function pointer target address
-    insn_disasm: lea rdx, sub_15BC910 # Must load/reference the function pointer target address
+found_funcptr: # 非虚的普通函数指针
+  - insn_va: '0x180666600' # 必须加载或引用该函数指针的目标地址
+    insn_disasm: lea rdx, sub_15BC910 # 必须加载或引用该函数指针的目标地址
     funcptr_name: CLoopMode_OnClientPollNetworking
 
-found_gv: # This is for reference to global variable.
+found_gv: # 对全局变量的引用
   - insn_va: '0x180444400'
-    insn_disasm: mov rcx, cs:qword_180666600 # Must load/reference the global variable
+    insn_disasm: mov rcx, cs:qword_180666600 # 必须加载或引用该全局变量
     gv_name: g_pNetworkMessages
   - insn_va: '0x180333300'
-    insn_disasm: lea rax, unk_180222200 # Must load/reference the global variable
+    insn_disasm: lea rax, unk_180222200 # 必须加载或引用该全局变量
     gv_name: s_EventManager
 
-found_struct_offset: # This is for reference to struct offset. NOTE THAT virtual function pointer should not be here! virtual function pointer should ALWAYS be in found_vcall !
-  - insn_va: '0x1801BA12A' # Always be the instruction with displacement offset
-    insn_disasm: mov rcx, [r14+58h] # Always be the instruction with displacement offset
+found_struct_offset: # 对结构体偏移的引用。注意：虚函数指针不应出现在这里！虚函数指针始终应放在 found_vcall 中！
+  - insn_va: '0x1801BA12A' # 始终是带位移偏移的那条指令
+    insn_disasm: mov rcx, [r14+58h] # 始终是带位移偏移的那条指令
     offset: '0x58'
     size: 8
     struct_name: CResourceService
     member_name: m_pEntitySystem
 ```
 
-If nothing found, output an empty YAML. DO NOT output anything other than the desired YAML. DO NOT collect unrelated symbols.
+若未找到任何内容，输出空的 YAML。除所需的 YAML 之外不要输出任何东西。不要收集无关符号。
 ```
 
 ### 变量说明

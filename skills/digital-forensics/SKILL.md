@@ -1,9 +1,9 @@
 ---
 name: digital-forensics
-description: Use for authorized digital forensics including memory dumps, disk timelines, PCAP investigation, artifact triage, and IR evidence preservation.
+description: 用于已授权的数字取证，涵盖内存转储、磁盘时间线、PCAP 调查、伪影排查与 IR 证据保全。
 ---
 
-# Digital Forensics & IR Artifacts
+# 数字取证与 IR 伪影
 
 ## ACTION REQUIRED（读完后立刻执行）
 

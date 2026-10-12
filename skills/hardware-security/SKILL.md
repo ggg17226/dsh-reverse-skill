@@ -1,9 +1,9 @@
 ---
 name: hardware-security
-description: Use for authorized hardware and embedded interface security research including UART/JTAG discovery, debug pad triage, secure boot overview, and offline firmware extraction support.
+description: 用于已授权的硬件与嵌入式接口安全研究，涵盖 UART/JTAG 发现、调试焊盘排查、安全启动概览与离线固件提取支持。
 ---
 
-# Hardware / Embedded Interface Security
+# 硬件 / 嵌入式接口安全
 
 ## ACTION REQUIRED（读完后立刻执行）
 

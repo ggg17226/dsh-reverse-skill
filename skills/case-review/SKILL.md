@@ -1,52 +1,52 @@
 ---
 name: case-review
-description: Reviews a reverse-skill case package for scope readiness, Evidence to Finding to Path traceability, work item coverage, timeline references, and optional artifact hash integrity before report handoff.
+description: 在报告交接之前，审查 reverse-skill 的案件包是否具备 scope 就绪性、Evidence 到 Finding 到 Path 的可追溯性、work item 覆盖度、时间线引用，以及可选的产物哈希完整性。
 ---
 
-# Evidence Graph Review
+# Evidence 图审查
 
-Use this skill when a reverse engineering, forensics, CTF, or authorized security case needs a defensible handoff. It audits the existing `work/<case>/` package without changing the case or touching a target.
+当逆向工程、取证、CTF 或授权安全案件需要可辩护的交接时，使用本技能。它审计既有的 `work/<case>/` 案件包，不改变案件，也不接触目标。
 
-## Scope
+## 范围
 
-This skill covers:
+本技能覆盖：
 
-- Scope metadata and target-activity readiness
-- Evidence record structure and reproducibility fields
-- References from work items and timeline entries to Evidence
-- Structured Findings and Paths in report Markdown
-- Optional SHA-256 verification for case-local artifacts
-- A Markdown or JSON review result for a report handoff
+- scope 元数据与目标活动就绪性
+- Evidence 记录结构与可复现性字段
+- work item 与时间线条目对 Evidence 的引用
+- 报告 Markdown 中结构化的 Finding 与 Path
+- 对案件内产物的可选 SHA-256 校验
+- 用于报告交接的 Markdown 或 JSON 审查结果
 
-It MUST NOT perform reconnaissance, exploitation, dynamic instrumentation, or target changes. Those actions belong to the routed analysis skill and require the case scope gate.
+它 MUST NOT 进行侦察、漏洞利用、动态插桩或改动目标。那些动作属于被路由到的分析技能，并且需要案件 scope 门。
 
-## ACTION REQUIRED
+## ACTION REQUIRED（读完后立刻执行）
 
-1. `NOW`: read `../field-journal/precedent-reverse.md` and confirm that this is a review of an existing authorized case package.
-2. `NOW`: confirm the case path and choose read-only review mode.
-3. `NEXT`: read `../tool-index.md`; this skill uses only Python 3 standard library and does not require bootstrap.
-4. `NEXT`: run `python3 scripts/review_case.py <case-root> --format markdown`.
-5. `ACT`: resolve every error, then rerun the review before claiming a handoff is complete.
+1. `NOW`：读取 `../field-journal/precedent-reverse.md`，确认本次是对既有授权案件包的审查。
+2. `NOW`：确认案件路径，并选择只读审查模式。
+3. `NEXT`：读取 `../tool-index.md`；本技能只使用 Python 3 标准库，不需要 bootstrap。
+4. `NEXT`：运行 `python3 scripts/review_case.py <case-root> --format markdown`。
+5. `ACT`：解决每一个错误，然后重新运行审查，之后才能声称交接完成。
 
-## Tool dependencies
+## 工具依赖
 
-| Tool | Required | Purpose | Auto-bootstrap |
+| 工具 | 是否必需 | 用途 | 可否自动自举 |
 |------|----------|---------|---------------|
-| Python 3.9+ | Yes | Runs the read-only case review script | No, use the platform Python installation |
+| Python 3.9+ | 是 | 运行只读的案件审查脚本 | 否，使用平台自带的 Python |
 
-No network access or third-party package is required.
+不需要网络访问，也不需要第三方包。
 
-## Workflow
+## 工作流
 
-### Phase 1: Intake
+### 阶段 1：受理（Intake）
 
-Run the review against the existing case directory:
+对既有案件目录运行审查：
 
 ```bash
 python3 skills/case-review/scripts/review_case.py work/<case> --format markdown
 ```
 
-Confirm that `scope.md`, `timeline.md`, `workitems.md`, and `evidence/` are present. A non-strict review reports scope warnings while a strict review treats warnings as handoff blockers.
+确认 `scope.md`、`timeline.md`、`workitems.md` 与 `evidence/` 均存在。非严格审查只报告 scope 警告，而严格审查会把警告视为交接阻塞项。
 
 ## 建议下一步（选一个编号）
 
@@ -56,20 +56,20 @@ Confirm that `scope.md`, `timeline.md`, `workitems.md`, and `evidence/` are pres
 4. 换 JSON 输出接入 CI 或其他审查工具
 5. 暂停，先确认审查范围
 
-### Phase 2: Traceability
+### 阶段 2：可追溯性（Traceability）
 
-Review the checks for:
+审查以下检查项：
 
-- Evidence IDs that do not exist
-- Findings without `evidence_ids`
-- Paths without an allowed `path_type` or Evidence reference
-- Work items and timeline entries pointing to unknown Evidence
-- Unlinked Evidence records
-- Validated Findings with low confidence
+- 引用了不存在的 Evidence ID
+- Finding 缺少 `evidence_ids`
+- Path 使用了不允许的 `path_type`，或缺少 Evidence 引用
+- work item 与时间线条目指向未知的 Evidence
+- 未被任何记录引用的 Evidence
+- 已标记为 Validated 但置信度很低的 Finding
 
-An offline observation may use `repro_command: n/a` only when its `notes` field explicitly documents the offline limitation.
+离线观察只有在 `notes` 字段明确记录了该离线限制时，才可使用 `repro_command: n/a`。
 
-Use JSON when another tool needs stable fields:
+当其他工具需要稳定字段时使用 JSON：
 
 ```bash
 python3 skills/case-review/scripts/review_case.py work/<case> --format json
@@ -83,17 +83,17 @@ python3 skills/case-review/scripts/review_case.py work/<case> --format json
 4. 生成 Markdown handoff summary
 5. 换回 PRIMARY skill 继续分析
 
-### Phase 3: Fixity verification
+### 阶段 3：固定性校验（Fixity verification）
 
-When an Evidence record contains both `content_hash` and `artifact_path`, verify the case-local artifact:
+当某条 Evidence 记录同时包含 `content_hash` 与 `artifact_path` 时，校验案件内的产物：
 
 ```bash
 python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --strict
 ```
 
-The script accepts `sha256:<64 hex characters>` and checks that the artifact remains inside the case root. A hash mismatch is a hard failure.
+脚本接受 `sha256:<64 位十六进制字符>`，并检查该产物仍位于案件根目录之内。哈希不匹配属于硬失败。
 
-The PowerShell Evidence helper can record a hash while appending a record:
+PowerShell 的 Evidence 辅助脚本可以在追加记录的同时记录哈希：
 
 ```powershell
 powershell -File skills/scripts/append-evidence.ps1 -CaseRoot work\<case> -Id E-001 -Title "Sample hash" -ReproCommand "sha256sum evidence/sample.bin" -ArtifactPath "evidence\sample.bin"
@@ -107,15 +107,15 @@ powershell -File skills/scripts/append-evidence.ps1 -CaseRoot work\<case> -Id E-
 4. 导出 JSON 结果供 CI 保存
 5. 暂停并请求人工复核
 
-### Phase 4: Handoff
+### 阶段 4：交接（Handoff）
 
-Use strict mode before a final report or specialist handoff:
+在最终报告或向专项交接之前使用严格模式：
 
 ```bash
 python3 skills/case-review/scripts/review_case.py work/<case> --strict --format markdown > work/<case>/report/case-review.md
 ```
 
-The command is read-only with respect to the case unless shell redirection is explicitly used to save its output. The review is not legal advice and does not replace organizational evidence handling procedures.
+除非显式使用 shell 重定向保存输出，否则该命令对案件而言是只读的。本审查不构成法律意见，也不替代组织自身的证据处理流程。
 
 ## 建议下一步（选一个编号）
 
@@ -124,25 +124,25 @@ The command is read-only with respect to the case unless shell redirection is ex
 3. 归档 Markdown 和 JSON review 结果
 4. 暂停并请求人工复核
 
-## Language behavior contract
+## 语言行为约定
 
-- Internal reasoning, tool selection, and phase control: English.
-- User-visible messages, section labels, reports, and next-step menus: Chinese unless the user requests another language.
-- Default bilingual labels place Chinese first and English second, separated by `/`.
+- 内部推理、工具选择与阶段控制：英文。
+- 用户可见消息、章节标签、报告与下一步菜单：中文，除非用户要求其他语言。
+- 默认双语标签为中文在前、英文在后，用 `/` 分隔。
 
-## Bootstrap boundary
+## 自举边界
 
-This skill has no third-party dependency. If Python 3 is unavailable, the only allowed recovery action is the repository bootstrap path when a Python capability is registered for the current platform. If no such capability is registered, stop and report the missing runtime. Do not guess executable paths, download packages, or perform a manual install from inside this skill.
+本技能没有第三方依赖。若 Python 3 不可用，唯一允许的补救动作是在当前平台已登记 Python 能力时走仓库的 bootstrap 路径。若未登记此类能力，就停止并报告缺失的运行时。不要猜可执行文件路径、不要下载包，也不要从本技能内部执行手动安装。
 
-## Routing context
+## 路由上下文
 
-**Upstream entry**: any reverse, forensics, CTF, or authorized security skill that has produced a case package.
+**上游入口**：任何已经产出案件包的逆向、取证、CTF 或授权安全技能。
 
-**Downstream exit**: `docs-generator/` for a formal report, or the original PRIMARY skill when the graph is incomplete.
+**下游出口**：`docs-generator/` 用于生成正式报告；当证据图不完整时回到原来的 PRIMARY skill。
 
-**Related modules**: `ops/evidence-finding-path.md`, `ops/timeline-workitem.md`, `digital-forensics/`, `reverse-engineering/`, and `docs-generator/`.
+**关联模块**：`ops/evidence-finding-path.md`、`ops/timeline-workitem.md`、`digital-forensics/`、`reverse-engineering/` 与 `docs-generator/`。
 
-## References
+## 参考资料
 
 - [NIST SP 800-86: Guide to Integrating Forensic Techniques into Incident Response](https://csrc.nist.gov/pubs/sp/800/86/final)
 - [SWGDE Best Practices for Computer Forensic Acquisitions](https://www.swgde.org/documents/published-complete-listing/17-f-002-2-1/)

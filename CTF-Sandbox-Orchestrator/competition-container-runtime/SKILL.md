@@ -1,51 +1,51 @@
 ---
 name: competition-container-runtime
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for live container runtime analysis, mounted secrets, sidecars, namespaces, init containers, entrypoint drift, and route-to-container resolution. Use when the user asks why a live container differs from manifests, where a mounted secret is consumed, how a sidecar or init container changes runtime state, or which route resolves to which live container. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向容器实时运行时分析、被挂载的密钥、sidecar、namespace、init 容器、entrypoint 漂移与「路由到容器」解析的 CTF 沙箱工作流。当用户询问为什么实时容器与清单不一致、被挂载的密钥在哪里被消费、sidecar 或 init 容器如何改变运行时状态，或哪条路由解析到哪个实时容器时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Container Runtime
+# 竞赛容器运行时
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the challenge is really about what the live container or pod is doing now, not what the checked-in manifest claims it should do.
+当题目的实质是「实时容器或 pod 现在到底在做什么」，而不是「签入的清单声称它该做什么」时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Split intent from reality: manifest, image, startup, live mount, live route, live process.
-2. Map host -> proxy -> container or pod -> mounted volume -> consuming process.
-3. Keep secrets, rendered config, init output, and sidecar output separate from static manifests.
-4. Prove one minimal live path from mounted or injected state to reachable behavior.
-5. Reproduce the effect with the smallest runtime-specific chain.
+1. 把意图与现实拆开：manifest、镜像、启动过程、实时挂载、实时路由、实时进程。
+2. 梳理链路：宿主机 → 代理 → 容器或 pod → 挂载卷 → 消费进程。
+3. 把密钥、渲染后的配置、init 输出与 sidecar 输出同静态清单分开保存。
+4. 证明一条从「被挂载或注入的状态」到「可达行为」的最小实时路径。
+5. 用最小的运行时特定链条复现该效果。
 
-## Workflow
+## 工作流
 
-### 1. Map The Live Runtime
+### 1. 梳理实时运行时
 
-- Compare compose or kube manifests against running containers, pods, mounted volumes, env, sidecars, init containers, and entrypoints.
-- Identify which process actually consumes the mounted secret, rendered config, or shared volume output.
+- 将 compose 或 kube 清单与正在运行的容器、pod、挂载卷、环境变量、sidecar、init 容器及 entrypoint 对照比较。
+- 确定究竟是哪个进程在消费被挂载的密钥、渲染后的配置或共享卷的输出。
 
-### 2. Trace Route And Mount Boundaries
+### 2. 追踪路由与挂载边界
 
-- Map virtual host, reverse proxy, service, container port, filesystem mount, and runtime-generated file paths together.
-- Record whether the decisive state is image-baked, env-injected, mounted later, or written by an init/sidecar process.
+- 把虚拟主机、反向代理、service、容器端口、文件系统挂载与运行时生成的文件路径一并对应起来。
+- 记录决定性状态是「打进镜像的」「由环境变量注入的」「后来才挂载的」，还是「由 init 或 sidecar 进程写入的」。
 
-### 3. Report The Runtime Deviation
+### 3. 报告运行时偏差
 
-- State the earliest point where live runtime diverges from checked-in intent.
-- Keep one compact evidence chain from manifest or compose intent to live consumer behavior.
+- 指出实时运行时与签入意图发生分歧的最早时间点。
+- 保留一条从 manifest 或 compose 意图到实时消费方行为的紧凑证据链。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/container-runtime.md` for the runtime checklist, mount-chain checklist, and common live-vs-static pitfalls.
-- If the hard part is kube API permissions, service-account trust, RBAC edges, admission mutations, or controller-created workload drift, prefer `$competition-k8s-control-plane`.
-- If the hard part is Host-header routing, path-prefix rewriting, or route-to-service mapping across nodes, prefer `$competition-runtime-routing`.
-- If the hard part is proving container-to-host crossover, kernel attack-surface preconditions, or stable escape primitives, prefer `$competition-kernel-container-escape`.
-- If the hard part is replaying Linux secrets, socket trust edges, or host-to-host pivots after container foothold, prefer `$competition-linux-credential-pivot`.
+- 加载 `references/container-runtime.md`，获取运行时检查清单、挂载链检查清单与常见的实时/静态对照陷阱。
+- 若难点在于 kube API 权限、服务账号信任、RBAC 边界、准入变更或控制器创建的工作负载漂移，优先用 `$competition-k8s-control-plane`。
+- 若难点在于 Host 头路由、路径前缀重写或跨节点的「路由到服务」映射，优先用 `$competition-runtime-routing`。
+- 若难点在于证明容器到宿主机的越界、内核攻击面前置条件或稳定的逃逸原语，优先用 `$competition-kernel-container-escape`。
+- 若难点在于拿到容器立足点后重放 Linux 密钥、socket 信任边界或宿主机间跳板，优先用 `$competition-linux-credential-pivot`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Compose/Kubernetes fragments tied to live mounts or routes
-- Container IDs, pod names, mount paths, sidecar outputs, rendered config paths, and consuming processes
-- The exact route or file path that becomes reachable only at runtime
+- 与实时挂载或路由相对应的 compose/Kubernetes 片段
+- 容器 ID、pod 名、挂载路径、sidecar 输出、渲染后的配置路径与消费进程
+- 仅在运行时才变得可达的确切路由或文件路径

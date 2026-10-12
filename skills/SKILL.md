@@ -1,8 +1,8 @@
 ---
 name: reverse-skill-router
-description: Routes reverse engineering, exploitation, penetration testing, malware, mobile, firmware, browser automation, documentation, and security tasks to the appropriate specialist skill. Use when a task spans modules or the correct reverse-skill entrypoint is unclear.
+description: 把逆向工程、漏洞利用、渗透测试、恶意样本、移动端、固件、浏览器自动化、文档编写与安全类任务路由到合适的专项技能。当任务横跨多个模块，或不清楚正确的 reverse-skill 入口时使用。
 ---
-# Reverse Engineering Skills Master Control
+# 逆向工程技能总控
 
 本目录收录了一系列逆向工程相关的技能模块，每个子目录是一个独立模块，内含 `SKILL.md` 描述其适用场景、工具链和工作流程。
 

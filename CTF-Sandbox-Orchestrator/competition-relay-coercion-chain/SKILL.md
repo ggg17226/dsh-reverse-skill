@@ -1,50 +1,50 @@
 ---
 name: competition-relay-coercion-chain
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for forced-auth coercion, relay chains, target selection, NTLM or related acceptance paths, and coercion-to-privilege transitions. Use when the user asks to trace a coercion primitive, follow a relay path, analyze forced authentication, determine which service accepts relayed auth, or connect a coercion step to resulting privilege, enrollment, or code execution. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向强制认证（forced-auth coercion）、中继链、目标选择、NTLM 或相关接受路径，以及「强制认证到权限」转变的 CTF 沙箱工作流。当用户要求追踪强制认证原语、跟踪中继路径、分析强制认证、确定哪个服务接受被中继的认证，或把强制认证步骤与由此得到的权限、注册或代码执行关联起来时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Relay Coercion Chain
+# 竞赛中继与强制认证链
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is proving the full chain from forced authentication to a service that actually accepts the relayed identity.
+当难点在于证明从强制认证到「某个服务真正接受被中继身份」的完整链条时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Split the chain into coercion source, captured auth, relay target, acceptance point, and resulting effect.
-2. Record transport, protocol, and service identity at each hop.
-3. Separate forced-auth generation from relay success and from downstream privilege.
-4. Keep coercion trigger, relay transcript, and accepting service in one evidence chain.
-5. Reproduce the smallest coercion-to-acceptance path that proves the decisive edge.
+1. 把链条拆成：强制认证来源、捕获到的认证、中继目标、接受点与产生的效果。
+2. 记录每一跳的传输、协议与服务身份。
+3. 把「强制认证的产生」「中继成功」与「下游权限」三者分开。
+4. 把强制触发、中继记录与接受服务放在同一条证据链上。
+5. 复现能证明决定性边界的最小「强制认证到接受」路径。
 
-## Workflow
+## 工作流
 
-### 1. Map The Coercion Source
+### 1. 梳理强制认证来源
 
-- Identify the service, RPC, file path, printer path, WebDAV edge, or protocol trigger that forces authentication.
-- Record source host, coerced principal, transport, and any environmental preconditions.
-- Keep one compact note of exactly what causes the auth to leave the source.
+- 识别强制产生认证的服务、RPC、文件路径、打印机路径、WebDAV 边界或协议触发点。
+- 记录来源主机、被强制的主体、传输方式与任何环境前置条件。
+- 简洁记录究竟是什么导致认证离开来源主机。
 
-### 2. Trace The Relay Target
+### 2. 追踪中继目标
 
-- Record where the authentication lands, how it is forwarded, and which protocol or service consumes it.
-- Distinguish capture-only, replay-only, and actual relay acceptance.
-- Keep service name, target host, protocol, relay transcript, and acceptance response tied together.
+- 记录认证落到哪里、如何被转发，以及哪个协议或服务消费它。
+- 区分「仅捕获」「仅重放」与「真正的中继接受」。
+- 让服务名、目标主机、协议、中继记录与接受响应保持一一对应。
 
-### 3. Reduce To The Decisive Relay Chain
+### 3. 收敛到决定性中继链
 
-- Compress the result to the smallest sequence: coercion trigger -> relayed auth -> accepted service -> resulting privilege or artifact.
-- State clearly whether the decisive weakness lives in the coercion source, the relay target, signing settings, or the accepted downstream service.
-- If the path ultimately becomes a certificate-enrollment issue or a pure Kerberos delegation edge, hand off to the tighter specialized skill.
+- 把结论压缩为最小序列：强制触发 → 被中继的认证 → 接受该认证的服务 → 得到的权限或产物。
+- 明确说明决定性弱点位于强制来源、中继目标、签名设置，还是接受它的下游服务。
+- 若路径最终变成证书注册问题或纯粹的 Kerberos 委派边界，交给更贴合的专项技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/relay-coercion-chain.md` for the coercion checklist, relay checklist, and evidence packaging.
+- 加载 `references/relay-coercion-chain.md`，获取强制认证检查清单、中继检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Coercion trigger details, source host, coerced identity, target host, accepting service, and resulting effect
-- Relay transcripts, error or acceptance responses, and the exact protocol used at each hop
-- The smallest replayable coercion-to-acceptance sequence
+- 强制触发细节、来源主机、被强制身份、目标主机、接受服务与产生的效果
+- 中继记录、错误或接受响应，以及每一跳使用的确切协议
+- 最小的可重放「强制认证到接受」序列

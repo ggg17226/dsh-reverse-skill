@@ -1,52 +1,52 @@
 ---
 name: competition-pcap-protocol
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for packet capture analysis, session reconstruction, application-protocol decoding, stream reassembly, beacon timing, and packet-to-process correlation. Use when the user asks to analyze a PCAP, rebuild TCP or UDP sessions, decode HTTP, WebSocket, DNS, custom C2, or binary protocols, extract transferred artifacts, or tie packet sequences to host or malware behavior. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向抓包分析、会话重建、应用协议解码、流重组、beacon 时序与「数据包到进程」关联的 CTF 沙箱工作流。当用户要求分析 PCAP、重建 TCP 或 UDP 会话、解码 HTTP、WebSocket、DNS、自定义 C2 或二进制协议、提取传输的产物，或把数据包序列与主机或恶意行为关联起来时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition PCAP Protocol
+# 竞赛 PCAP 与协议
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive evidence sits inside packet order, protocol framing, or stream reconstruction rather than a single IOC or host log.
+当决定性证据位于数据包顺序、协议分帧或流重组之中，而不是单个 IOC 或主机日志里时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Establish the capture boundaries first: hosts, time span, interfaces, missing packets, retransmits, and stream count.
-2. Group traffic into sessions before decoding payload semantics.
-3. Record protocol framing, sequence, timing, and transferred artifacts together instead of as isolated packets.
-4. Correlate packet evidence with host, malware, or app behavior only after the session is reconstructed.
-5. Reproduce the smallest decoded stream or transferred artifact that proves the challenge path.
+1. 先确定抓包边界：主机、时间范围、接口、缺失的数据包、重传与流数量。
+2. 在解码载荷语义之前，先把流量按会话分组。
+3. 把协议分帧、序列、时序与传输的产物一并记录，而不是孤立地看单个数据包。
+4. 只有在会话重建完成之后，才把数据包证据与主机、恶意样本或应用行为关联起来。
+5. 复现能证明题目路径的最小解码流或传输产物。
 
-## Workflow
+## 工作流
 
-### 1. Build The Session Map
+### 1. 建立会话映射
 
-- Identify endpoints, protocols, ports, TLS handshakes, DNS lookups, websocket upgrades, and long-lived streams.
-- Note missing capture coverage, asymmetric routing, packet loss, or reassembly issues before drawing conclusions.
-- Separate control channels, bulk transfers, keepalives, and noise.
+- 识别端点、协议、端口、TLS 握手、DNS 查询、WebSocket 升级与长连接流。
+- 在得出结论之前，先注明抓包覆盖缺口、非对称路由、丢包或重组问题。
+- 把控制信道、批量传输、保活与噪声分开。
 
-### 2. Decode The Protocol Boundary
+### 2. 解码协议边界
 
-- Reassemble TCP streams or UDP conversations before interpreting fields.
-- Recover framing, message order, custom headers, binary fields, compression, encryption boundaries, and object transfers.
-- Keep payload direction, timing, and session state aligned with each decoded message.
+- 先重组 TCP 流或 UDP 会话，再解释字段含义。
+- 还原分帧、消息顺序、自定义头部、二进制字段、压缩、加密边界与对象传输。
+- 让载荷方向、时序与会话状态与每条解码出的消息保持一致。
 
-### 3. Tie Packets To Behavior
+### 3. 把数据包与行为关联
 
-- Show which packet sequence maps to which host event, malware branch, login flow, upload, exfiltration step, or command channel.
-- Distinguish protocol recognition from artifact recovery: naming HTTP, DNS, or a custom C2 is not enough without decoded content or proven downstream effect.
-- If the task becomes mostly a host timeline problem after decode, switch to the tighter forensic timeline skill.
+- 说明哪段数据包序列对应哪个主机事件、恶意样本分支、登录流程、上传、外传步骤或命令信道。
+- 把「识别出协议」与「恢复出产物」区分开：仅指出这是 HTTP、DNS 或某个自定义 C2 还不够，必须有解码内容或已证明的下游效果。
+- 若解码之后题目主要变成主机时间线问题，切到更贴合的 forensic timeline 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/pcap-protocol.md` for the session checklist, decode checklist, and evidence packaging.
-- If the hard part is a WebSocket or SSE handshake, subscription flow, realtime frames, or frame-driven state, prefer `$competition-websocket-runtime`.
-- If the hard part is a custom handshake, framing, checksum, sequence dependency, or deterministic replay harness, prefer `$competition-custom-protocol-replay`.
+- 加载 `references/pcap-protocol.md`，获取会话检查清单、解码检查清单与证据打包方式。
+- 若难点在于 WebSocket 或 SSE 握手、订阅流程、实时帧或帧驱动状态，优先用 `$competition-websocket-runtime`。
+- 若难点在于自定义握手、分帧、校验和、序列依赖或确定性重放工具，优先用 `$competition-custom-protocol-replay`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Stream IDs, endpoint pairs, packet ranges, timestamps, protocol framing, and object boundaries
-- Decoded requests, responses, commands, transferred files, and the session that carried them
-- The exact packet sequence or reconstructed stream that proves the challenge behavior
+- 流 ID、端点对、数据包区间、时间戳、协议分帧与对象边界
+- 解码出的请求、响应、命令、传输的文件，以及承载它们的会话
+- 能证明题目行为的确切数据包序列或重建流

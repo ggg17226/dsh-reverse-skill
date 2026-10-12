@@ -1,9 +1,9 @@
 ---
 name: windows-ad
-description: Use for authorized Active Directory and Windows identity attacks including Kerberos, AD CS, BloodHound paths, NTLM relay, and domain privilege escalation research.
+description: 用于已授权的 Active Directory 与 Windows 身份攻击研究，涵盖 Kerberos、AD CS、BloodHound 攻击路径、NTLM 中继与域内权限提升。
 ---
 
-# Windows / Active Directory Security
+# Windows / Active Directory 安全
 
 ## ACTION REQUIRED（读完后立刻执行）
 

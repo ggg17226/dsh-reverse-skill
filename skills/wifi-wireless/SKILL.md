@@ -1,9 +1,9 @@
 ---
 name: wifi-wireless
-description: Use for authorized wireless security assessment including Wi-Fi capture, WPA handshake analysis, rogue AP detection research, and lab-only deauth testing.
+description: 用于已授权的无线安全评估，涵盖 Wi-Fi 抓包、WPA 握手分析、流氓 AP 检测研究，以及仅限实验室的 deauth 测试。
 ---
 
-# Wi-Fi / Wireless Security
+# Wi-Fi / 无线安全
 
 ## ACTION REQUIRED（读完后立刻执行）
 

@@ -1,9 +1,9 @@
 ---
 name: database-security
-description: Use for authorized database security assessment covering PostgreSQL/MySQL/MSSQL/Mongo/Redis exposure, authz, UDF/command paths, and misconfiguration review.
+description: 用于已授权的数据库安全评估，涵盖 PostgreSQL/MySQL/MSSQL/Mongo/Redis 暴露面、授权模型、UDF/命令执行路径与配置错误审查。
 ---
 
-# Database Security Assessment
+# 数据库安全评估
 
 ## ACTION REQUIRED（读完后立刻执行）
 

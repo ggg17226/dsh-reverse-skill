@@ -1,54 +1,54 @@
 ---
 name: competition-identity-windows
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for Active Directory, Kerberos, LDAP, OAuth, enterprise messaging, Windows host forensics, credential material, and lateral-movement challenges. Use when the user asks to trace tickets or tokens, inspect mailbox rules, analyze Windows host evidence, understand an AD trust path, or explain a lateral-movement chain across sandbox-linked nodes. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 Active Directory、Kerberos、LDAP、OAuth、企业消息系统、Windows 主机取证、凭据材料与横向移动类题目的 CTF 沙箱工作流。当用户要求追踪票据或令牌、检查邮箱规则、分析 Windows 主机证据、理解 AD 信任路径，或解释跨沙箱关联节点的横向移动链时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Identity Windows
+# 竞赛 Windows 身份
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the challenge revolves around identity flow, replayable credentials, Windows host artifacts, enterprise mail, or lateral movement.
+当题目围绕身份流转、可重放的凭据、Windows 主机产物、企业邮件或横向移动展开时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Map the identity or pivot chain before diving into every host artifact.
-2. Separate credential possession from accepted privilege.
-3. Correlate identity evidence, host evidence, and mail evidence on one timeline.
-4. Keep tickets, SIDs, event IDs, mailbox rules, and pivot hosts in compact evidence blocks.
-5. Reproduce the privilege edge or mail effect from the smallest viable chain.
+1. 先梳理身份或跳板链，再深入每一份主机产物。
+2. 把「持有凭据」与「权限被接受」区分开。
+3. 在同一时间线上关联身份证据、主机证据与邮件证据。
+4. 用紧凑的证据区块保留票据、SID、事件 ID、邮箱规则与跳板主机。
+5. 用最小可行链条复现出权限边界或邮件效果。
 
-## Workflow
+## 工作流
 
-### 1. Identity And AD
+### 1. 身份与 AD
 
-- Trace principal origin, sync path, token or ticket minting, claims transformation, group resolution, and accepting service.
-- When Kerberos matters, record ticket type, SPN, delegation mode, PAC or group data, encryption type, and cache location.
+- 追踪主体来源、同步路径、令牌或票据签发、声明变换（claims transformation）、组解析与接受服务。
+- 当 Kerberos 是重点时，记录票据类型、SPN、委派模式、PAC 或组数据、加密类型与缓存位置。
 
-### 2. Windows Host And Pivoting
+### 2. Windows 主机与跳板
 
-- Correlate SAM, SECURITY, SYSTEM, NTDS, DPAPI, LSA secrets, ETW, Sysmon, PowerShell, services, tasks, WMI, WinRM, SMB, and RDP as one pivot graph.
-- Express movement as a concrete chain: foothold -> recovered artifact -> replay path -> pivot host -> resulting capability.
+- 把 SAM、SECURITY、SYSTEM、NTDS、DPAPI、LSA secrets、ETW、Sysmon、PowerShell、服务、计划任务、WMI、WinRM、SMB 与 RDP 关联为同一张跳板图。
+- 把移动过程表述为具体链条：立足点 → 恢复出的产物 → 重放路径 → 跳板主机 → 得到能力。
 
-### 3. Enterprise Messaging
+### 3. 企业消息系统
 
-- Keep phishing lures, consent logs, mailbox rules, and identity-provider events tied together so the mail path and privilege path stay connected.
+- 把钓鱼诱饵、授权同意日志、邮箱规则与身份提供方事件关联在一起，使邮件路径与权限路径保持连通。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/identity-windows.md` for the ticket, host, and enterprise-messaging checklist.
-- If the task is primarily a host-to-host pivot, Kerberos replay, or Windows privilege chain, prefer `$competition-windows-pivot`.
-- If the task is specifically about constrained delegation, unconstrained delegation, RBCD, S4U, or ticket-acceptance proof, prefer `$competition-kerberos-delegation`.
-- If the task is specifically about AD CS, certificate templates, EKUs, enrollment rights, PKINIT, or cert-based privilege, prefer `$competition-ad-certificate-abuse`.
-- If the task is specifically about OAuth or OIDC claims, callback flow, scopes, consent, or accepted login identity, prefer `$competition-oauth-oidc-chain`.
-- If the task is specifically about DPAPI masterkeys, vault blobs, browser or vault secrets, backup-key use, or protected-secret-to-access chains, prefer `$competition-dpapi-credential-chain`.
-- If the task is specifically about LSASS memory, ticket caches, LUID-linked material, DPAPI context, or replayable host credential artifacts, prefer `$competition-lsass-ticket-material`.
-- If the task is specifically about mailbox rules, forwarding, OAuth consent, delegate access, or transport-level mail abuse, prefer `$competition-mailbox-abuse`.
-- If the task is specifically about forced authentication, relay targets, or proving which service accepts relayed auth, prefer `$competition-relay-coercion-chain`.
+- 加载 `references/identity-windows.md`，获取票据、主机与企业消息系统的检查清单。
+- 若任务主要是主机到主机的跳板、Kerberos 重放或 Windows 权限链，优先用 `$competition-windows-pivot`。
+- 若任务具体涉及约束委派、非约束委派、RBCD、S4U 或票据接受证明，优先用 `$competition-kerberos-delegation`。
+- 若任务具体涉及 AD CS、证书模板、EKU、注册权限、PKINIT 或基于证书的权限，优先用 `$competition-ad-certificate-abuse`。
+- 若任务具体涉及 OAuth 或 OIDC 声明、回调流程、scope、授权同意或被接受的登录身份，优先用 `$competition-oauth-oidc-chain`。
+- 若任务具体涉及 DPAPI masterkey、vault blob、浏览器或 vault 密钥、备份密钥使用，或「受保护密钥到访问」链，优先用 `$competition-dpapi-credential-chain`。
+- 若任务具体涉及 LSASS 内存、票据缓存、与 LUID 关联的材料、DPAPI 上下文或可重放的主机凭据产物，优先用 `$competition-lsass-ticket-material`。
+- 若任务具体涉及邮箱规则、转发、OAuth 授权同意、代理访问或传输层邮件滥用，优先用 `$competition-mailbox-abuse`。
+- 若任务具体涉及强制认证、中继目标，或证明哪个服务接受被中继的认证，优先用 `$competition-relay-coercion-chain`。
 
-## What To Preserve
+## 需要保留的内容
 
-- SIDs, SPNs, ticket fields, event IDs, mailbox rules, and replay points
-- Exact host-to-host pivot order and the service that accepts the credential or ticket
-- Raw artifacts, parsed summaries, and derived timelines as separate outputs
+- SID、SPN、票据字段、事件 ID、邮箱规则与重放点
+- 确切的主机到主机跳板顺序，以及接受凭据或票据的服务
+- 原始产物、解析摘要与推导出的时间线，分别作为独立输出

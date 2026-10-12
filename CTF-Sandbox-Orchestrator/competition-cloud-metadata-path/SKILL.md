@@ -1,51 +1,51 @@
 ---
 name: competition-cloud-metadata-path
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for cloud metadata services, instance identity, workload identity, link-local credential paths, role assumption, and metadata-to-privilege trust edges. Use when the user asks to inspect metadata-service access, instance credentials, pod or workload identity, link-local token paths, SSRF-to-metadata escalation, or explain how metadata-derived credentials turn into accepted cloud or control-plane privilege. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向云元数据服务、实例身份、工作负载身份、链路本地凭据路径、角色扮演（role assumption）与「元数据到权限」信任边界的 CTF 沙箱工作流。当用户要求检查元数据服务访问、实例凭据、pod 或工作负载身份、链路本地令牌路径、SSRF 到元数据的提权，或解释元数据派生凭据如何转化为被接受的云或控制面权限时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Cloud Metadata Path
+# 竞赛云元数据路径
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive edge is not just reaching metadata, but proving how metadata-derived identity becomes accepted privilege.
+当决定性的边界不只是「能否访问元数据」，而是「元数据派生的身份如何变成被接受的权限」时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Identify which metadata surface is active: instance metadata, workload identity, node identity, task role, or platform-specific token endpoint.
-2. Record the exact reachability path: local process, pod, container, proxy, SSRF surface, or host route.
-3. Separate metadata reachability from credential issuance and from downstream privilege acceptance.
-4. Keep token format, role identity, scope, and accepting API in compact evidence blocks.
-5. Reproduce the smallest metadata-to-accepted-privilege path that proves the challenge edge.
+1. 确认当前生效的是哪个元数据面：实例元数据、工作负载身份、节点身份、任务角色，还是平台特有的令牌端点。
+2. 记录确切的可达路径：本地进程、pod、容器、代理、SSRF 面或宿主机路由。
+3. 把「元数据可达」「凭据签发」与「下游权限接受」三个环节分开。
+4. 用紧凑的证据区块保留令牌格式、角色身份、scope 与接受的 API。
+5. 复现能证明题目边界的、最小的「元数据 → 被接受权限」路径。
 
-## Workflow
+## 工作流
 
-### 1. Map Metadata Reachability
+### 1. 梳理元数据可达性
 
-- Record the metadata endpoint, required headers, hop limits, session tokens, workload selectors, or path prefixes.
-- Note whether access comes from direct local calls, pod networking, SSRF, sidecar, or host-level routing.
-- Keep the reaching surface and the metadata endpoint in one chain.
+- 记录元数据端点、必需请求头、跳数限制、会话令牌、工作负载选择器或路径前缀。
+- 注明访问来自直接的本地调用、pod 网络、SSRF、sidecar 还是宿主机级路由。
+- 把发起访问的面与元数据端点放在同一条链上。
 
-### 2. Prove Credential Or Identity Issuance
+### 2. 证明凭据或身份的签发
 
-- Show how the metadata response becomes a token, temporary credential, signed identity doc, or platform-specific workload identity.
-- Record expiration, role name, subject, audience, issuer, or cloud account mapping that matters downstream.
-- Distinguish raw metadata from usable credential material.
+- 说明元数据响应如何变成令牌、临时凭据、已签名的身份文档，或平台特有的工作负载身份。
+- 记录对下游有意义的过期时间、角色名、主体、audience、issuer 或云账号映射。
+- 把「原始元数据」与「可用的凭据材料」区分开。
 
-### 3. Reduce To The Decisive Trust Path
+### 3. 收敛到决定性信任路径
 
-- Compress the result to the smallest sequence: reaching surface -> metadata call -> credential issued -> accepted cloud or cluster action.
-- State clearly whether the weakness lives in reachability, metadata config, role trust, downstream policy, or workload binding.
-- If the challenge narrows to RBAC or cluster mutation after credential issuance, switch back to the tighter control-plane skill.
+- 把结论压缩为最小序列：发起面 → 元数据调用 → 凭据签发 → 被接受的云或集群操作。
+- 明确说明弱点位于可达性、元数据配置、角色信任、下游策略还是工作负载绑定。
+- 若题目在凭据签发之后收窄到 RBAC 或集群改动，切回更贴合的 control-plane 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/cloud-metadata-path.md` for the reachability checklist, token checklist, and evidence packaging.
-- If the hard part is first proving a server-side fetch primitive, SSRF reachability, or internal endpoint traversal before metadata itself, prefer `$competition-ssrf-metadata-pivot`.
+- 加载 `references/cloud-metadata-path.md`，获取可达性检查清单、令牌检查清单与证据打包方式。
+- 若最困难的部分是在元数据之前先证明一个服务端请求原语、SSRF 可达性或内部端点穿越，优先用 `$competition-ssrf-metadata-pivot`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Metadata endpoints, required headers, reachability path, issued tokens or creds, and accepted APIs
-- Role names, audiences, issuers, account bindings, and privilege-bearing actions
-- The smallest replayable metadata-to-privilege chain
+- 元数据端点、必需请求头、可达路径、签发的令牌或凭据，以及被接受的 API
+- 角色名、audience、issuer、账号绑定与带权限的操作
+- 最小的可重放「元数据 → 权限」链

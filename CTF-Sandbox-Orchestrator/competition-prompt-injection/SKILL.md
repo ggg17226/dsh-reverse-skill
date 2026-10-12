@@ -1,49 +1,49 @@
 ---
 name: competition-prompt-injection
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for prompt-injection, retrieval poisoning, memory contamination, planner drift, MCP or tool-boundary abuse, and agent exfiltration challenges. Use when the user asks to analyze prompt injection, retrieval poisoning, memory contamination, planner drift, tool-argument corruption, or secret exposure caused by an agent chain. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向提示注入、检索投毒、记忆污染、规划器漂移、MCP 或工具边界滥用与 Agent 数据外传类题目的 CTF 沙箱工作流。当用户要求分析提示注入、检索投毒、记忆污染、规划器漂移、工具参数污染，或由 Agent 链导致的密钥暴露时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Prompt Injection
+# 竞赛提示注入
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the challenge is primarily about trust boundaries inside an agentic system.
+当题目的核心是 Agent 系统内部的信任边界时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Identify the first untrusted content that becomes model-visible.
-2. Map the chain from retrieval, memory, or transcript into planner or executor behavior.
-3. Record the exact point where text becomes a tool argument, file path, network target, or secret request.
-4. Prove one minimal exploit chain before exploring variants.
-5. Keep prompt snippets and tool transitions in compact evidence blocks.
+1. 找出第一段「变成模型可见」的不可信内容。
+2. 梳理从检索、记忆或对话记录进入规划器或执行器行为的链条。
+3. 记录文本变成工具参数、文件路径、网络目标或密钥请求的确切位置。
+4. 在探索各种变体之前，先证明一条最小利用链。
+5. 用紧凑的证据区块保留提示片段与工具状态转移。
 
-## Workflow
+## 工作流
 
-### 1. Map The Control Stack
+### 1. 梳理控制栈
 
-- Track system, developer, user, retrieved, memory, planner, and tool-response layers separately.
-- Distinguish claimed capability from runtime-exposed capability.
-- Note what the model can actually call, read, or mutate.
+- 分别追踪 system、developer、user、检索内容、记忆、规划器与工具响应各层。
+- 把「声称具备的能力」与「运行时实际暴露的能力」区分开。
+- 注明模型实际可以调用、读取或改动什么。
 
-### 2. Prove The Boundary Crossing
+### 2. 证明边界穿越
 
-- Reproduce one chain from untrusted text to changed planner behavior, changed tool args, or secret exposure.
-- Keep the decisive transcript compact: source chunk, rewritten planner state, final tool invocation.
-- Prefer the smallest transcript that still demonstrates the bug.
+- 复现一条从不可信文本到规划器行为改变、工具参数改变或密钥暴露的链条。
+- 让决定性记录保持紧凑：来源分块、被改写的规划器状态、最终工具调用。
+- 优先选择仍能演示该缺陷的最小记录。
 
-### 3. Report By Boundary
+### 3. 按边界归因报告
 
-- State which layer failed: retrieval, summarizer, planner, executor, tool normalization, or output post-processing.
-- Separate instruction drift from actual side effect.
+- 说明是哪一层失效：检索、摘要器、规划器、执行器、工具归一化，还是输出后处理。
+- 把「指令漂移」与「实际副作用」区分开。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/prompt-injection.md` for the checklist, evidence layout, and common prompt-boundary pitfalls.
+- 加载 `references/prompt-injection.md`，获取检查清单、证据排版与常见提示边界陷阱。
 
-## What To Preserve
+## 需要保留的内容
 
-- Original malicious chunk or prompt
-- Intermediate summary or planner drift if it matters
-- Final tool args, file paths, or exposed secret surface
+- 原始的恶意分块或提示
+- 若关键，则保留中间摘要或规划器漂移
+- 最终工具参数、文件路径或暴露的密钥面

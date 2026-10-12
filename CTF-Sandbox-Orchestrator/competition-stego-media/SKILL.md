@@ -1,50 +1,50 @@
 ---
 name: competition-stego-media
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for image, audio, video, document, and container steganography. Use when the user asks to inspect metadata, alpha or palette channels, LSBs, thumbnails, appended trailers, QR fragments, transcoding artifacts, or recover a hidden payload from media without blind brute force. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向图像、音频、视频、文档与容器隐写的 CTF 沙箱工作流。当用户要求检查元数据、alpha 或调色板通道、LSB、缩略图、尾部追加数据、QR 分片、转码痕迹，或在不做盲目暴力尝试的前提下从媒体中恢复隐藏载荷时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Stego Media
+# 竞赛媒体隐写
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the challenge lives inside a media container, hidden channel, or appended payload rather than a conventional crypto blob.
+当题目藏在媒体容器、隐藏信道或尾部追加载荷中，而不是常规加密数据块里时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Confirm the real container type, dimensions, duration, codec, and chunk layout before guessing a hidden layer.
-2. Check metadata, thumbnails, sidecar files, and appended trailers before deeper signal-domain work.
-3. Rank candidate channels by evidence: alpha, palette, LSB, transform-domain residue, frame order, or container slack.
-4. Preserve each extracted layer separately so the transform chain stays reproducible.
-5. Stop when the hidden payload is reproduced, not merely suspected.
+1. 在猜测隐藏层之前，先确认真实的容器类型、尺寸、时长、编解码器与 chunk 布局。
+2. 在深入信号域之前，先检查元数据、缩略图、伴随文件与尾部追加数据。
+3. 按证据给候选信道排序：alpha、调色板、LSB、变换域残留、帧顺序或容器空闲区。
+4. 把每一层提取结果分别保留，使变换链保持可复现。
+5. 在隐藏载荷被真正复现时停止，而不是仅停留在怀疑。
 
-## Workflow
+## 工作流
 
-### 1. Establish Container Truth
+### 1. 确定容器真相
 
-- Inspect headers, chunk tables, EXIF or document metadata, container indexes, thumbnails, and file size anomalies.
-- Compare declared format against observed structure to catch polyglots, appended archives, or malformed trailers.
-- Record exact offsets, frame numbers, or channel boundaries that look promising.
+- 检查头部、chunk 表、EXIF 或文档元数据、容器索引、缩略图与文件大小异常。
+- 把声明的格式与观察到的结构对照，以捕捉 polyglot、尾部追加的压缩包或畸形尾部数据。
+- 记录看起来有希望的确切偏移、帧号或通道边界。
 
-### 2. Inspect Candidate Channels
+### 2. 检查候选信道
 
-- Check alpha, palette order, RGB or YUV planes, LSBs, spectrogram features, document object streams, or video frame deltas.
-- Prefer evidence-driven attempts over brute forcing every transform.
-- Note whether the payload is plain bytes, another media layer, compressed data, or an encrypted blob.
+- 检查 alpha、调色板顺序、RGB 或 YUV 平面、LSB、频谱图特征、文档对象流或视频帧差分。
+- 优先采用证据驱动的尝试，而不是把每种变换都暴力试一遍。
+- 注明载荷是纯字节、另一层媒体、压缩数据，还是加密数据块。
 
-### 3. Reconstruct The Hidden Payload Path
+### 3. 重建隐藏载荷路径
 
-- Keep the chain in order: container -> channel or carrier -> extraction -> decompression or decode -> final parse.
-- Separate extraction success from final interpretation; a channel hit is not the same as artifact recovery.
-- If the problem becomes primarily about cryptography after extraction, hand off to the broader crypto skill.
+- 按顺序保留链条：容器 → 通道或载体 → 提取 → 解压或解码 → 最终解析。
+- 把「提取成功」与「最终解释」区分开；命中某个通道不等于已恢复产物。
+- 若提取之后问题主要变成密码学，交给更通用的密码学技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/stego-media.md` for the media checklist, channel ranking guide, and evidence packaging.
+- 加载 `references/stego-media.md`，获取媒体检查清单、通道排序指南与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- File structure facts: offsets, chunks, frame numbers, stream names, metadata keys, and trailer size
-- Intermediate extractions and the exact command or transform used to produce them
-- The final recovered payload and the channel that produced it
+- 文件结构事实：偏移、chunk、帧号、流名称、元数据键与尾部数据大小
+- 中间提取结果，以及产生它们的确切命令或变换
+- 最终恢复出的载荷与产生它的通道

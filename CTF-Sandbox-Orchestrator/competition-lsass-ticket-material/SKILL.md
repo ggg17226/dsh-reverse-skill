@@ -1,51 +1,51 @@
 ---
 name: competition-lsass-ticket-material
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for LSASS-resident secrets, Windows logon sessions, Kerberos ticket caches, DPAPI-backed material, SSP artifacts, and replayable credential extraction. Use when the user asks to inspect LSASS memory, recover tickets or logon sessions, trace DPAPI or SSP material, distinguish which credential artifacts are replayable, or connect host-resident credential material to an accepted pivot or privilege edge. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 LSASS 常驻密钥、Windows 登录会话、Kerberos 票据缓存、DPAPI 支撑材料、SSP 产物与可重放凭据提取的 CTF 沙箱工作流。当用户要求检查 LSASS 内存、恢复票据或登录会话、追踪 DPAPI 或 SSP 材料、判断哪些凭据产物可重放，或把主机常驻凭据材料与可接受的跳板或权限边界关联起来时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition LSASS Ticket Material
+# 竞赛 LSASS 票据材料
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive host artifact lives in LSASS, ticket caches, or adjacent credential material and the hard part is proving what is replayable.
+当决定性的主机产物位于 LSASS、票据缓存或相邻凭据材料中、而难点在于证明「什么可以被重放」时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Separate raw credential material from actually usable replay edges.
-2. Record logon session, LUID, ticket cache, package, account, and target service before broad conclusions.
-3. Keep host artifact, extracted secret, replay attempt, and resulting acceptance in one chain.
-4. Distinguish password, hash, ticket, DPAPI secret, SSP residue, and token by where each can actually be used.
-5. Reproduce the smallest host-artifact-to-accepted-privilege path that proves the decisive edge.
+1. 把原始凭据材料与真正可用的重放边界区分开。
+2. 在得出宽泛结论之前，先记录登录会话、LUID、票据缓存、package、账号与目标服务。
+3. 把主机产物、提取出的密钥、重放尝试与由此得到的接受结果放在同一条链上。
+4. 按「各自实际可在哪里使用」区分口令、哈希、票据、DPAPI 密钥、SSP 残留与令牌。
+5. 复现能证明决定性边界的最小「主机产物到被接受权限」路径。
 
-## Workflow
+## 工作流
 
-### 1. Map LSASS And Adjacent Credential State
+### 1. 梳理 LSASS 与相邻凭据状态
 
-- Record logon sessions, LUIDs, ticket caches, package names, SSPs, DPAPI context, and any service-account material tied to the active path.
-- Note whether the decisive value is a TGT, service ticket, delegated ticket, DPAPI secret, plaintext, hash, or package-specific secret.
-- Keep host source, account context, and cache location tied together.
+- 记录登录会话、LUID、票据缓存、package 名称、SSP、DPAPI 上下文，以及任何与当前路径相关的服务账号材料。
+- 注明决定性的值是 TGT、服务票据、委派票据、DPAPI 密钥、明文、哈希，还是某个 package 特有的密钥。
+- 让主机来源、账号上下文与缓存位置保持一一对应。
 
-### 2. Prove Replay Or Acceptance
+### 2. 证明重放或接受
 
-- Show where the extracted material is accepted: SMB, WinRM, service ticket use, DPAPI unwrap, Schannel, or another host or service edge.
-- Record SPN, target host, logon session, ticket flags, encryption type, and resulting privilege or token change.
-- Distinguish material that is present from material that is actually replayable in this path.
+- 说明提取出的材料在哪里被接受：SMB、WinRM、服务票据使用、DPAPI 解包、Schannel，或其他主机或服务边界。
+- 记录 SPN、目标主机、登录会话、票据标志、加密类型，以及由此得到的权限或令牌变化。
+- 把「材料存在」与「在当前路径中确实可重放」区分开。
 
-### 3. Reduce To The Decisive Credential Chain
+### 3. 收敛到决定性凭据链
 
-- Compress the result to the smallest sequence: host artifact -> extracted material -> accepted replay or unwrap -> resulting capability.
-- State clearly whether the decisive edge lives in LSASS memory, ticket cache reuse, DPAPI context, or accepting service behavior.
-- If the task broadens into full host-to-host pivoting, hand back to the tighter Windows pivot skill.
+- 把结论压缩为最小序列：主机产物 → 提取出的材料 → 被接受的重放或解包 → 得到的能力。
+- 明确说明决定性边界位于 LSASS 内存、票据缓存复用、DPAPI 上下文，还是接受服务的行为。
+- 若任务扩展到完整的主机到主机跳板，交回更贴合的 Windows pivot 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/lsass-ticket-material.md` for the session checklist, replay checklist, and evidence packaging.
-- If the task is specifically about DPAPI masterkeys, protected blobs, browser or vault stores, or proving which recovered DPAPI secret is accepted, prefer `$competition-dpapi-credential-chain`.
+- 加载 `references/lsass-ticket-material.md`，获取会话检查清单、重放检查清单与证据打包方式。
+- 若任务具体涉及 DPAPI masterkey、受保护 blob、浏览器或 vault 存储，或证明哪个恢复出的 DPAPI 密钥会被接受，优先用 `$competition-dpapi-credential-chain`。
 
-## What To Preserve
+## 需要保留的内容
 
-- LUIDs, session IDs, ticket types, SPNs, encryption types, package names, and cache or memory source
-- The exact accepting host or service and the resulting privilege or logon effect
-- One minimal host-artifact-to-replay sequence that proves the edge
+- LUID、会话 ID、票据类型、SPN、加密类型、package 名称，以及缓存或内存来源
+- 确切的接受主机或服务，以及由此得到的权限或登录效果
+- 一条能证明该边界的最小「主机产物到重放」序列

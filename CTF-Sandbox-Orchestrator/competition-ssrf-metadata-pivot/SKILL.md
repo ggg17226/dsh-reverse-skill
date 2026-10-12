@@ -1,50 +1,50 @@
 ---
 name: competition-ssrf-metadata-pivot
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for SSRF reachability, internal route probing, metadata-service access, credential pivoting, and token-to-accepted-privilege chains. Use when the user asks to trace SSRF sources, internal hosts, metadata endpoints, link-local tokens, service-account credentials, or explain how a server-side fetch edge turns into accepted access. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 SSRF 可达性、内部路由探测、元数据服务访问、凭据跳板与「令牌到被接受权限」链的 CTF 沙箱工作流。当用户要求追踪 SSRF 来源、内部主机、元数据端点、链路本地令牌、服务账号凭据，或解释服务端请求边界如何变成被接受的访问时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition SSRF Metadata Pivot
+# 竞赛 SSRF 与元数据跳板
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive path runs through server-side request capability, internal service reachability, or metadata-derived credentials.
+当决定性路径要穿过服务端请求能力、内部服务可达性或元数据派生凭据时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Separate the SSRF source, forwarding layer, reachable target, and accepted downstream credential edge.
-2. Record request method, URL construction, header behavior, redirects, DNS or host overrides, and response shaping before mutation.
-3. Map internal host, metadata endpoint, token extraction, and accepting service as one chain.
-4. Distinguish read-only reachability from credential-bearing access.
-5. Reproduce the smallest SSRF-to-accepted-access path.
+1. 把 SSRF 来源、转发层、可达目标与被接受的下游凭据边界分开。
+2. 在改动之前，先记录请求方法、URL 构造方式、头部行为、重定向、DNS 或 host 覆盖与响应塑形。
+3. 把内部主机、元数据端点、令牌提取与接受服务梳理为同一条链。
+4. 把「只读可达」与「携带凭据的访问」区分开。
+5. 复现最小的「SSRF 到被接受访问」路径。
 
-## Workflow
+## 工作流
 
-### 1. Map SSRF Reachability
+### 1. 梳理 SSRF 可达性
 
-- Record source primitive: URL parameter, webhook, image fetcher, importer, proxy endpoint, or backend callback.
-- Note normalization steps: scheme filtering, host allowlists, redirects, DNS resolution, path rewrite, and header injection.
-- Keep target host, protocol, and response behavior tied to the exact SSRF source.
+- 记录来源原语：URL 参数、webhook、图片抓取器、导入器、代理端点或后端回调。
+- 注明归一化步骤：scheme 过滤、主机白名单、重定向、DNS 解析、路径重写与头部注入。
+- 让目标主机、协议与响应行为都对应到确切的 SSRF 来源。
 
-### 2. Trace Metadata And Credential Pivot
+### 2. 追踪元数据与凭据跳板
 
-- Show whether metadata endpoints, internal control APIs, or workload identity services are reachable.
-- Record token fields, role scope, service account, expiration, and where the token is accepted.
-- Distinguish credential extraction success from accepted privilege at a downstream service.
+- 说明元数据端点、内部控制 API 或工作负载身份服务是否可达。
+- 记录令牌字段、角色 scope、服务账号、过期时间，以及令牌在哪里被接受。
+- 把「凭据提取成功」与「下游服务接受该权限」区分开。
 
-### 3. Reduce To Decisive SSRF Chain
+### 3. 收敛到决定性 SSRF 链
 
-- Compress to: SSRF source -> internal or metadata target -> credential or sensitive response -> accepted replay or API access.
-- State whether the decisive edge is parser bypass, allowlist bypass, redirect abuse, header confusion, or metadata trust.
-- If the task becomes mostly cloud identity policy analysis, hand off to the tighter cloud metadata skill.
+- 压缩为：SSRF 来源 → 内部或元数据目标 → 凭据或敏感响应 → 被接受的重放或 API 访问。
+- 说明决定性边界是解析器绕过、白名单绕过、重定向滥用、头部混淆，还是元数据信任。
+- 若任务主要变成云身份策略分析，交给更贴合 cloud metadata 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/ssrf-metadata-pivot.md` for SSRF checklists, metadata pivots, and evidence packaging.
+- 加载 `references/ssrf-metadata-pivot.md`，获取 SSRF 检查清单、元数据跳板与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- SSRF source point, URL construction rules, reachable hosts, and response deltas
-- Extracted token or credential fields, scope, and accepting service
-- One minimal SSRF-to-accepted-access replay path
+- SSRF 来源点、URL 构造规则、可达主机与响应差异
+- 提取出的令牌或凭据字段、scope 与接受服务
+- 一条最小的「SSRF 到被接受访问」重放路径

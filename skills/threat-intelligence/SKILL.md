@@ -1,9 +1,9 @@
 ---
 name: threat-intelligence
-description: Use for authorized OSINT and cyber threat intelligence that enriches IOCs, campaigns, impersonation, scams, or threat actors from public sources. Includes bounded X/Twitter search through Xquik, source preservation, corroboration, and evidence handoff.
+description: 用于已授权的 OSINT 与网络威胁情报工作，从公开来源补充 IOC、活动、仿冒、诈骗或威胁行为体信息。涵盖经由 Xquik 的有界 X/Twitter 搜索、来源留存、交叉印证与证据交接。
 ---
 
-# Threat Intelligence & Public-Source OSINT
+# 威胁情报与公开来源 OSINT
 
 ## ACTION REQUIRED（读完后立刻执行）
 
@@ -36,7 +36,7 @@ description: Use for authorized OSINT and cyber threat intelligence that enriche
 | Xquik REST | 否 | 脚本化的公开 X 数据读取 | `https://xquik.com/api/v1` + `XQUIK_API_KEY` |
 | 其他独立来源 | 是 | 核验 X 来源的候选结论 | 厂商公告、样本、DNS、证书、仓库或案件证据 |
 
-Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
+Xquik 是独立的第三方服务，与 X Corp. 无关联。"Twitter" 与 "X" 是 X Corp. 的商标。
 
 ## 工作流
 

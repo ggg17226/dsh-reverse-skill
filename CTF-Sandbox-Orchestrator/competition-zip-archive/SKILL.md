@@ -1,47 +1,47 @@
 ---
 name: competition-zip-archive
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for ZIP and PKZIP archive challenges, legacy ZipCrypto identification, known-plaintext recovery with bkcrack, key-based decryption, and reproducible extraction. Use when the user asks to solve an encrypted ZIP challenge, inspect ZipCrypto metadata, recover keys from a known file prefix, or unlock an archive without starting with password brute force. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 ZIP 与 PKZIP 压缩包题目、传统 ZipCrypto 识别、使用 bkcrack 做已知明文恢复、基于密钥的解密与可复现解压的 CTF 沙箱工作流。当用户要求解出加密 ZIP 题目、检查 ZipCrypto 元数据、从已知文件前缀恢复密钥，或在不以口令暴力破解为起点的情况下解锁压缩包时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition ZIP Archive
+# 竞赛 ZIP 压缩包
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is active and has established sandbox assumptions, evidence priorities, and the analysis project root. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、证据优先级与分析项目根目录之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive path is an encrypted ZIP/PKZIP archive rather than an upload parser or a generic crypto blob. Prefer the legacy ZipCrypto known-plaintext path when the challenge gives a predictable file, format header, template, or other recoverable plaintext. Do not begin with blind password brute force.
+当决定性路径是加密的 ZIP/PKZIP 压缩包，而不是上传解析器或通用加密数据块时，使用本技能。当题目给出可预测的文件、格式头、模板或其他可恢复明文时，优先走传统 ZipCrypto 的已知明文路径。不要以盲目口令暴力破解开始。
 
-Reply in Simplified Chinese unless the user explicitly requests English. Keep commands and tool output in their original form.
+除非用户明确要求英文，否则用简体中文回复。命令与工具输出保持原样。
 
-## Quick Start
+## 快速开始
 
-1. Preserve the original archive, compute a hash, and work on a copy under the analysis project's `work/<case>/` directory.
-2. Confirm the actual archive format and list entries before attempting a password attack.
-3. Determine whether the entry uses legacy ZipCrypto. `bkcrack` does not recover WinZip AES or other modern encryption.
-4. Build an exact known-plaintext candidate. The attack needs at least 12 known plaintext bytes, including at least 8 contiguous bytes.
-5. Recover the internal keys with `bkcrack`, then create an unencrypted copy and extract it.
-6. Preserve the command, entry names, known-plaintext source, recovered keys, output hash, and final flag as evidence.
+1. 留存原始压缩包、计算哈希，并在分析项目的 `work/<case>/` 目录下操作副本。
+2. 在尝试口令攻击之前，先确认实际的压缩包格式并列出条目。
+3. 判断该条目是否使用传统 ZipCrypto。`bkcrack` 无法恢复 WinZip AES 或其他现代加密。
+4. 构造精确的已知明文候选。该攻击至少需要 12 个已知明文字节，其中至少 8 个字节连续。
+5. 用 `bkcrack` 恢复内部密钥，然后生成未加密副本并解压。
+6. 把命令、条目名、已知明文来源、恢复出的密钥、输出哈希与最终 flag 作为证据保留。
 
-## Tool Setup
+## 工具准备
 
-Use the normal tool index and bootstrap path before guessing an executable location:
+在猜测可执行文件位置之前，先走常规 tool index 与 bootstrap 路径：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File skills/scripts/refresh-tool-index.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File skills/scripts/bootstrap-reverse.ps1 -Capability bkcrack
 ```
 
-On Kali, use the equivalent capability command:
+在 Kali 上，使用等价的能力命令：
 
 ```bash
 bash kali/scripts/bootstrap-reverse.sh bkcrack
 ```
 
-The Windows capability is pinned to the `v1.8.1` release and verifies the GitHub asset digest. If the tool is installed manually, refresh `skills/tool-index.md` afterward.
+Windows 能力固定在 `v1.8.1` 发行版，并会校验 GitHub asset 摘要。若手动安装该工具，之后需要刷新 `skills/tool-index.md`。
 
-## Workflow
+## 工作流
 
-### 1. Establish Archive Truth
+### 1. 确定压缩包真相
 
-Keep the original immutable and record:
+保持原始文件不可变，并记录：
 
 ```bash
 sha256sum challenge.zip
@@ -49,37 +49,37 @@ file challenge.zip
 bkcrack -L challenge.zip
 ```
 
-On Windows, use `Get-FileHash` in place of `sha256sum`. `bkcrack -L` shows entry names, compression methods, and encryption status. Do not infer the encryption type from the `.zip` extension alone.
+在 Windows 上，用 `Get-FileHash` 代替 `sha256sum`。`bkcrack -L` 会显示条目名、压缩方法与加密状态。不要仅凭 `.zip` 扩展名推断加密类型。
 
-Check the entry that will provide the known plaintext. A useful candidate is a stored or otherwise predictable file such as a PNG, PDF, text template, or challenge-generated configuration. A local ZIP header (`PK\x03\x04`) is metadata for the archive entry, not plaintext inside the encrypted member, so it is not by itself a useful known-plaintext sample.
+检查将用于提供已知明文的那个条目。有用的候选是 stored（未压缩）或其他可预测的文件，例如 PNG、PDF、文本模板，或题目生成的配置。本地 ZIP 头（`PK\x03\x04`）是该压缩包条目的元数据，不是加密成员内部的明文，因此它本身并不是有用的已知明文样本。
 
-### 2. Recover Keys With Known Plaintext
+### 2. 用已知明文恢复密钥
 
-When the ciphertext entry is `flag.txt` and a matching plaintext entry is available in `known.zip`:
+当密文条目是 `flag.txt`、且 `known.zip` 中存在匹配的明文条目时：
 
 ```bash
 bkcrack -C challenge.zip -c flag.txt -P known.zip -p flag.txt
 ```
 
-For raw ciphertext and plaintext files:
+对于原始密文与明文文件：
 
 ```bash
 bkcrack -c cipherfile -p plainfile
 ```
 
-The plaintext must match the bytes represented in the encrypted entry. If the entry was deflated, an uncompressed copy of the file is not automatically the right input; use a matching ZIP fixture or the exact compressed bytes.
+明文必须与加密条目中所表示的字节一致。若该条目经过 deflate 压缩，未压缩的副本并不会自动是正确的输入；应使用匹配的 ZIP 夹具或精确的压缩字节。
 
-If the known bytes begin at an offset, add `-o <offset>`. If only 8-11 bytes are contiguous, combine them with other known bytes using sparse hints:
+若已知字节从某个偏移开始，添加 `-o <offset>`。若只有 8-11 个字节连续，可用稀疏提示把它们与其他已知字节组合：
 
 ```bash
 bkcrack -c cipherfile -p plainfile -x 25 4b4f -x 30 21
 ```
 
-The successful run yields three internal ZipCrypto keys. Record them exactly as printed; they are not the original password.
+成功运行会得到三个内部 ZipCrypto 密钥。按打印结果原样记录；它们不是原始口令。
 
-### 3. Unlock And Validate
+### 3. 解锁并验证
 
-Use the recovered keys to make a new archive, leaving the source untouched:
+用恢复出的密钥生成新的压缩包，保持源文件不被改动：
 
 ```bash
 bkcrack -C challenge.zip -k K0 K1 K2 -D unlocked.zip
@@ -87,22 +87,22 @@ bkcrack -C challenge.zip -k K0 K1 K2 -D unlocked.zip
 7z x unlocked.zip -ounpacked
 ```
 
-Replace `K0 K1 K2` with the hexadecimal values printed by `bkcrack`. Validate the output with the archive test command and a hash or exact flag comparison. If only one raw member is needed, `-d` can write its deciphered bytes; deflated raw data may need the `inflate.py` helper shipped with bkcrack.
+把 `K0 K1 K2` 替换为 `bkcrack` 打印出的十六进制值。用压缩包测试命令以及哈希或精确 flag 比对来验证输出。若只需要某一个原始成员，可用 `-d` 写出其解密后的字节；deflate 压缩的原始数据可能需要 bkcrack 附带的 `inflate.py` 辅助脚本。
 
-### 4. Re-route When Preconditions Fail
+### 4. 前置条件不满足时改道
 
-- WinZip AES or another modern encryption mode: stop this path and identify the challenge-specific primitive.
-- No reliable known plaintext: inspect filenames, metadata, compression choices, challenge source, and other entries before considering password recovery.
-- Known plaintext shorter than the requirement: locate more contiguous bytes or use evidence-backed sparse offsets.
-- The problem is an application upload/parser chain: hand off to `$competition-file-parser-chain`.
-- The problem is a generic ciphertext or custom cipher after archive extraction: hand off to `$competition-crypto-mobile`.
+- WinZip AES 或其他现代加密模式：停止本路径，识别该题特有的原语。
+- 没有可靠的已知明文：先检查文件名、元数据、压缩方式选择、题目源码与其他条目，再考虑口令恢复。
+- 已知明文短于要求：寻找更多连续字节，或使用有证据支撑的稀疏偏移。
+- 问题属于应用上传/解析链：交给 `$competition-file-parser-chain`。
+- 解压之后问题属于通用密文或自定义密码：交给 `$competition-crypto-mobile`。
 
-## Evidence To Preserve
+## 需要保留的证据
 
-- Original and working-copy paths plus SHA-256 hashes
-- `bkcrack -L` output and the selected encrypted member
-- Exact plaintext fixture, compression method, offsets, and sparse byte hints
-- Key recovery command and the three recovered internal keys
-- `unlocked.zip` validation output, extraction path, and final artifact hash
+- 原始与工作副本路径，以及 SHA-256 哈希
+- `bkcrack -L` 输出与被选中的加密成员
+- 精确的明文夹具、压缩方法、偏移与稀疏字节提示
+- 密钥恢复命令与恢复出的三个内部密钥
+- `unlocked.zip` 的验证输出、解压路径与最终产物哈希
 
-Read `references/zip-archive.md` for the decision table and evidence checklist.
+决策表与证据检查清单见 `references/zip-archive.md`。

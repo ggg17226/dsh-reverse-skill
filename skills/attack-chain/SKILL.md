@@ -1,8 +1,8 @@
 ---
 name: attack-chain
-description: Use for authorized multi-stage attack-path planning and orchestration when a task spans reconnaissance, initial access, privilege escalation, lateral movement, or impact assessment. Route single-stage tasks directly to their specialist skill.
+description: 当任务横跨侦察、初始访问、权限提升、横向移动或影响评估时，用于已授权的多阶段攻击路径规划与编排。单阶段任务直接路由到对应的专项技能。
 ---
-# Attack Chain Orchestration Skill
+# 攻击链编排技能
 
 ## ACTION REQUIRED（读完后立刻执行）
 

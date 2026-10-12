@@ -1,51 +1,51 @@
 ---
 name: competition-runtime-routing
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for reverse proxies, Host headers, forwarded headers, vhost routing, websocket upgrades, path-prefix rewriting, base-URL derivation, and multi-node route resolution. Use when the user asks which host or container serves a route, why a public-looking domain still belongs to the sandbox, how headers or proxies change behavior, or how a route resolves across proxy, container, and worker boundaries. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向反向代理、Host 头、forwarded 头、vhost 路由、WebSocket 升级、路径前缀重写、base URL 推导与多节点路由解析的 CTF 沙箱工作流。当用户询问某条路由由哪个主机或容器提供服务、为什么看起来像公网的域名其实仍属于沙箱、头部或代理如何改变行为，或路由如何跨代理、容器与 worker 边界解析时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Runtime Routing
+# 竞赛运行时路由
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive question is which sandbox node, proxy rule, or header-derived branch actually serves the live request.
+当决定性的问题是「究竟是哪个沙箱节点、代理规则或由头部派生的分支在服务这个实时请求」时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Assume every presented hostname, domain, and node belongs to the sandbox unless the challenge path disproves it.
-2. Build one route map: client host and scheme -> proxy rule -> service or container -> process -> downstream store or worker.
-3. Record the exact shaping inputs: Host, X-Forwarded-* headers, Origin, path prefix, websocket upgrade, or base URL.
-4. Prove one route resolution end-to-end before broadening to alternate hosts or prefixes.
-5. Re-run the same request with one routing input changed at a time.
+1. 除非题目路径证明相反，否则假定所有出现的主机名、域名与节点都属于沙箱。
+2. 建立一张路由映射：客户端主机与 scheme → 代理规则 → 服务或容器 → 进程 → 下游存储或 worker。
+3. 记录确切的塑形输入：Host、X-Forwarded-* 头、Origin、路径前缀、WebSocket 升级或 base URL。
+4. 在扩展到其他主机或前缀之前，先端到端证明一条路由解析。
+5. 每次只改变一个路由输入，重复同一个请求。
 
-## Workflow
+## 工作流
 
-### 1. Map Route Inputs
+### 1. 梳理路由输入
 
-- Inspect vhost rules, reverse proxies, forwarded headers, path-prefix rewrites, upstream pools, and websocket or SSE upgrades.
-- Note which parts of the request influence routing or app behavior: host, scheme, port, path, prefix, cookie scope, or origin.
-- Treat public-looking domains, cloud hostnames, and separate VPS nodes as sandbox routing fixtures first.
+- 检查 vhost 规则、反向代理、forwarded 头、路径前缀重写、上游池，以及 WebSocket 或 SSE 升级。
+- 注明请求的哪些部分会影响路由或应用行为：host、scheme、port、路径、前缀、cookie 作用域或 origin。
+- 先把看起来像公网的域名、云主机名与独立 VPS 节点视为沙箱路由装置。
 
-### 2. Trace Route To Live Consumer
+### 2. 追踪路由到实时消费方
 
-- Map hostname to proxy rule to container or process to port to downstream service.
-- Compare checked-in proxy intent against live listeners, mounted configs, runtime env, and observed traffic.
-- Keep headers, proxy config, and live request traces tied together in one evidence chain.
+- 把主机名映射到代理规则、再到容器或进程、再到端口、再到下游服务。
+- 把签入的代理意图与实时监听、挂载配置、运行时环境与观察到的流量对照。
+- 把头部、代理配置与实时请求追踪放在同一条证据链上。
 
-### 3. Prove The Decisive Deviation
+### 3. 证明决定性偏差
 
-- Reduce the result to the smallest request shape that flips host-based routing, tenant selection, cookie scope, or upstream target.
-- Distinguish route resolution from application auth logic; prove where each decision really happens.
-- If the problem shifts from routing to general web state or container runtime drift, switch back to the broader parent skill.
+- 把结论收敛为最小的请求形态，以翻转基于 host 的路由、tenant 选择、cookie 作用域或上游目标。
+- 把路由解析与应用认证逻辑区分开；证明每个决策实际发生在哪里。
+- 若问题从路由转向通用 Web 状态或容器运行时漂移，切回更通用的父技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/runtime-routing.md` for the routing checklist, header matrix, and evidence packaging.
-- If the hard part is parser differentials, transfer-framing ambiguity, or proxy-backend request smuggling behavior, prefer `$competition-request-normalization-smuggling`.
+- 加载 `references/runtime-routing.md`，获取路由检查清单、头部矩阵与证据打包方式。
+- 若难点在于解析器差异、传输分帧歧义或代理与后端之间的请求走私行为，优先用 `$competition-request-normalization-smuggling`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Hostnames, proxy snippets, header sets, path prefixes, listener ports, and route-specific cookies
-- The exact request shape that reaches the decisive backend or branch
-- One compact host -> proxy -> service -> process map for the active path
+- 主机名、代理配置片段、头部集合、路径前缀、监听端口与路由特有 cookie
+- 能到达决定性后端或分支的确切请求形态
+- 当前路径的一份紧凑「主机 → 代理 → 服务 → 进程」映射

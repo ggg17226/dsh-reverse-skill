@@ -1,9 +1,9 @@
 ---
 name: ctf-sandbox
-description: Thin PRIMARY for CTF / AWD / 靶场 multi-type orchestration. Hands off to the sidecar CTF-Sandbox-Orchestrator. Use when the user says CTF, AWD, 靶场, or 比赛题 and no more specific pwn/APK/IDA route already won.
+description: 面向 CTF / AWD / 靶场多类型编排的轻量 PRIMARY。交接给 sidecar 的 CTF-Sandbox-Orchestrator。当用户提到 CTF、AWD、靶场或比赛题，且没有更具体的 pwn/APK/IDA 路由已经胜出时使用。
 ---
 
-# CTF sandbox entry (sidecar, not a second router)
+# CTF 沙箱入口（sidecar，不是第二个路由器）
 
 ## ACTION REQUIRED（读完后立刻执行）
 

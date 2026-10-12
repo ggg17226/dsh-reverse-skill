@@ -1,50 +1,50 @@
 ---
 name: competition-template-render-path
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for SSR, template rendering, route loaders, hydration payloads, server-client render boundaries, and template-to-handler enforcement gaps. Use when the user asks to inspect SSR or template routes, trace render context or hydration data, compare template gating with handler enforcement, explain preview or hidden-route rendering, or connect render pipeline behavior to the decisive branch. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 SSR、模板渲染、路由 loader、hydration 载荷、服务端与客户端渲染边界，以及「模板到处理器」约束缺口的 CTF 沙箱工作流。当用户要求检查 SSR 或模板路由、追踪渲染上下文或 hydration 数据、比较模板门控与处理器约束、解释预览或隐藏路由的渲染过程，或把渲染管线行为与决定性分支关联起来时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Template Render Path
+# 竞赛模板渲染路径
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive bug or artifact lives in route resolution, server render context, template data, or hydration handoff rather than in a plain JSON API alone.
+当决定性的缺陷或产物存在于路由解析、服务端渲染上下文、模板数据或 hydration 交接中，而不仅是单纯的 JSON API 时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Map the render chain in order: route resolution, loader or data fetch, template or component context, response HTML, hydration payload, and client takeover.
-2. Record host, route params, preview toggles, tenant or host switches, and server-only variables before mutating anything.
-3. Compare template gating with loader or handler enforcement.
-4. Preserve one successful render and one failing render path with the smallest delta.
-5. Reproduce the smallest request-to-render branch that proves the decisive behavior.
+1. 按顺序梳理渲染链：路由解析、loader 或数据获取、模板或组件上下文、响应 HTML、hydration 载荷与客户端接管。
+2. 在改动任何内容之前，先记录 host、路由参数、预览开关、tenant 或 host 切换，以及仅服务端可见的变量。
+3. 比较模板门控与 loader 或处理器约束。
+4. 保留一条成功渲染路径与一条失败渲染路径，并给出两者的最小差异。
+5. 复现能证明决定性行为的最小「请求到渲染」分支。
 
-## Workflow
+## 工作流
 
-### 1. Map Route To Render Context
+### 1. 梳理从路由到渲染上下文
 
-- Record host, path, route match, loader, template, layout, hydration blob, and client boot chunk for the active view.
-- Note whether the response is SSR HTML, static HTML plus hydration, edge-rendered content, or a template fragment used by another route.
-- Keep server-only context and client-visible context separate.
+- 记录当前视图的 host、路径、路由匹配、loader、模板、布局、hydration blob 与客户端启动 chunk。
+- 注明响应是 SSR HTML、静态 HTML 加 hydration、边缘渲染内容，还是被其他路由复用的模板片段。
+- 把仅服务端可见的上下文与客户端可见的上下文分开。
 
-### 2. Trace Template And Enforcement Boundaries
+### 2. 追踪模板与约束边界
 
-- Show where permissions, feature flags, preview state, tenant selection, or host-based switches are applied.
-- Compare template-level gating, loader-level gating, and backend handler enforcement instead of trusting any one layer.
-- Record hidden fields, inline data, hydration JSON, meta tags, or alternate partials that expose the decisive branch.
+- 说明权限、功能开关、预览状态、tenant 选择或基于 host 的切换在何处被施加。
+- 比较模板层门控、loader 层门控与后端处理器约束，不要只相信其中任意一层。
+- 记录暴露决定性分支的隐藏字段、内联数据、hydration JSON、meta 标签或备用 partial。
 
-### 3. Reduce To The Decisive Render Path
+### 3. 收敛到决定性渲染路径
 
-- Compress the result to the smallest sequence: request -> route match -> loader or template context -> rendered output or hidden data -> resulting effect.
-- State clearly whether the decisive weakness lives in route selection, template context construction, server-client hydration handoff, or mismatched enforcement between render and handler.
-- If the task becomes mostly emitted bundle recovery or source map reconstruction, hand off to the tighter bundle skill.
+- 把结论压缩为最小序列：请求 → 路由匹配 → loader 或模板上下文 → 渲染输出或隐藏数据 → 产生的效果。
+- 明确说明决定性弱点位于路由选择、模板上下文构造、服务端与客户端 hydration 交接，还是渲染层与处理器之间约束不一致。
+- 若任务主要变成产出 bundle 还原或 source map 重建，交给更贴合的 bundle 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/template-render-path.md` for the render checklist, hydration checklist, and evidence packaging.
+- 加载 `references/template-render-path.md`，获取渲染检查清单、hydration 检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Route names, loader names, templates, layouts, hydration keys, and host or preview switches
-- One success or failure pair that shows where render-layer behavior diverges
-- One minimal request-to-render sequence that reaches the decisive branch
+- 路由名、loader 名、模板、布局、hydration 键，以及 host 或预览开关
+- 一对能显示渲染层行为分歧的成功或失败样本
+- 一条能到达决定性分支的最小「请求到渲染」序列

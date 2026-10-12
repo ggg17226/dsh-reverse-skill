@@ -1,9 +1,9 @@
 ---
 name: cloud-k8s
-description: Use for authorized cloud, container, and Kubernetes security assessment including metadata SSRF, IAM misconfig, container escape paths, and cluster RBAC review.
+description: 用于已授权的云、容器与 Kubernetes 安全评估，涵盖元数据 SSRF、IAM 配置错误、容器逃逸路径与集群 RBAC 审查。
 ---
 
-# Cloud / Container / Kubernetes Security
+# 云 / 容器 / Kubernetes 安全
 
 ## ACTION REQUIRED（读完后立刻执行）
 

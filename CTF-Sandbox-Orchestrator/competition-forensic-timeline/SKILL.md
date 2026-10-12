@@ -1,51 +1,51 @@
 ---
 name: competition-forensic-timeline
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for DFIR chronology, cross-artifact correlation, persistence chains, and incident timeline reconstruction. Use when the user asks to build a forensic timeline, correlate EVTX, PCAP, registry, disk, memory, mailbox, or browser artifacts, explain the order of attacker actions, or pinpoint the stage where the decisive artifact appears. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 DFIR 时序分析、跨产物关联、持久化链与事件时间线重建的 CTF 沙箱工作流。当用户要求构建取证时间线、关联 EVTX、PCAP、注册表、磁盘、内存、邮箱或浏览器产物、说明攻击者动作的先后顺序，或定位决定性产物出现在哪个阶段时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Forensic Timeline
+# 竞赛取证时间线
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is not finding one artifact, but turning many artifacts into one replayable chronology.
+当难点不是找到某一个产物，而是把大量产物整理成一条可复现的时间线时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Pick the smallest reliable anchor: first execution, first logon, first network session, first file write, or first mailbox action.
-2. Normalize timestamps, time zones, hostnames, users, process IDs, message IDs, and file paths before correlating.
-3. Build one minimal chain from foothold to persistence, execution, access, or exfiltration.
-4. Separate confirmed event order from inferred gaps.
-5. Reproduce the decisive timeline segment that yields the artifact or privilege conclusion.
+1. 选择最小而可靠的锚点：首次执行、首次登录、首个网络会话、首次文件写入或首个邮箱操作。
+2. 在关联之前先统一时间戳、时区、主机名、用户、进程 ID、消息 ID 与文件路径。
+3. 从立足点到持久化、执行、访问或外传，构建一条最小链条。
+4. 把已确认的事件顺序与推断出的空缺分开。
+5. 复现能得出产物或权限结论的决定性时间段。
 
-## Workflow
+## 工作流
 
-### 1. Establish Timeline Anchors
+### 1. 建立时间线锚点
 
-- Collect only the active surfaces: EVTX, Sysmon, registry, Amcache, prefetch, browser artifacts, mail traces, PCAPs, memory, or filesystem metadata.
-- Record clock source, timezone, and any drift or truncation that could reorder events.
-- Link shared identifiers across sources: PID, logon ID, GUID, message ID, hostname, username, IP, or hash.
+- 只收集当前活跃的证据面：EVTX、Sysmon、注册表、Amcache、prefetch、浏览器产物、邮件痕迹、PCAP、内存或文件系统元数据。
+- 记录时钟来源、时区，以及任何可能改变事件顺序的漂移或截断。
+- 在各来源之间关联共享标识：PID、登录 ID、GUID、消息 ID、主机名、用户名、IP 或哈希。
 
-### 2. Correlate The Execution Graph
+### 2. 关联执行图
 
-- Track process tree, service or task creation, network sessions, file writes, registry changes, mailbox rules, or token use as one path.
-- Distinguish causal edges from coincidence by matching identifiers and adjacency, not just nearby timestamps.
-- Keep raw artifact and parsed summary side by side so every step can be traced back.
+- 把进程树、服务或计划任务创建、网络会话、文件写入、注册表变更、邮箱规则或令牌使用当作同一条路径来追踪。
+- 通过标识符匹配与相邻关系（而不仅是时间戳接近）区分因果边与巧合。
+- 让原始产物与解析摘要并排保留，使每一步都可回溯。
 
-### 3. Compress To The Decisive Story
+### 3. 压缩为决定性叙事
 
-- Reduce the timeline to the smallest sequence that proves initial access, persistence, lateral movement, collection, or artifact recovery.
-- Call out missing validation steps separately instead of mixing them into confirmed chronology.
-- If the task becomes mainly about malware config extraction or a Windows pivot edge, switch to the tighter specialized skill.
+- 把时间线压缩为能证明初始访问、持久化、横向移动、收集或产物恢复的最小序列。
+- 把缺失的验证步骤单独列出，不要混入已确认的时间顺序中。
+- 若任务主要转向恶意样本配置提取或 Windows 跳板边界，切到更贴合的专项技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/forensic-timeline.md` for anchor selection, cross-source correlation, and evidence packaging.
-- If the hard part is packet reassembly, protocol framing, or transferred-object extraction from a capture, prefer `$competition-pcap-protocol`.
+- 加载 `references/forensic-timeline.md`，获取锚点选择、跨来源关联与证据打包方式。
+- 若难点在于从流量中做包重组、协议分帧或传输对象提取，优先用 `$competition-pcap-protocol`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Source file paths, event IDs, logon IDs, message IDs, PIDs, hashes, and timestamps with timezone noted
-- One compact timeline table or ordered list for the decisive segment
-- Raw artifacts, parsed output, and inferred edges kept separate
+- 来源文件路径、事件 ID、登录 ID、消息 ID、PID、哈希与带时区标注的时间戳
+- 决定性时间段的一张紧凑时间线表或有序列表
+- 原始产物、解析输出与推断出的边分别保留

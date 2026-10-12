@@ -1,9 +1,9 @@
 ---
 name: code-audit
-description: Use for authorized source-code security review and SAST workflows including Semgrep, CodeQL patterns, dangerous API hunting, and fix verification.
+description: 用于已授权的源码安全审查与 SAST 工作流，涵盖 Semgrep、CodeQL 规则、危险 API 查找与修复验证。
 ---
 
-# Source Code Security Audit
+# 源码安全审计
 
 ## ACTION REQUIRED（读完后立刻执行）
 

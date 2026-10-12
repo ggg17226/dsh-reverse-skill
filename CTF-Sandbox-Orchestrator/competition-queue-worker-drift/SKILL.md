@@ -1,50 +1,50 @@
 ---
 name: competition-queue-worker-drift
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for queues, async workers, cron jobs, delayed tasks, retry behavior, worker-only config drift, and payload-to-side-effect chains. Use when the user asks to trace a queue payload, inspect async job execution, explain worker-only behavior, follow retries or dead-letter handling, or connect an enqueued item to a later file, cache, email, or privilege-bearing side effect. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向队列、异步 worker、cron 任务、延迟任务、重试行为、仅存在于 worker 的配置漂移与「载荷到副作用」链的 CTF 沙箱工作流。当用户要求追踪队列载荷、检查异步 job 执行、解释仅存在于 worker 的行为、跟踪重试或死信处理，或把入队项与后续的文件、缓存、邮件或带权限的副作用关联起来时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Queue Worker Drift
+# 竞赛队列与 Worker 漂移
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the decisive effect happens after enqueue, inside a worker, or only under async runtime state that differs from the request path.
+当决定性效果发生在入队之后、worker 内部，或只在与请求路径不同的异步运行时状态下出现时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Map the async chain first: enqueue point, queue payload, worker consumer, retries, and final side effect.
-2. Keep request-time state separate from worker-time state.
-3. Record queue name, message shape, worker config, retry policy, and downstream store in one chain.
-4. Compare synchronous path and async path when behavior diverges.
-5. Reproduce the smallest enqueue-to-side-effect flow that proves the decisive async drift.
+1. 先梳理异步链：入队点、队列载荷、worker 消费方、重试与最终副作用。
+2. 把「请求时的状态」与「worker 时的状态」分开。
+3. 在同一条链上记录队列名、消息形态、worker 配置、重试策略与下游存储。
+4. 当行为出现分歧时，比较同步路径与异步路径。
+5. 复现能证明决定性异步漂移的最小「入队到副作用」流程。
 
-## Workflow
+## 工作流
 
-### 1. Map Enqueue And Worker Identity
+### 1. 梳理入队与 Worker 身份
 
-- Record queue names, topics, cron schedules, delayed jobs, dead-letter queues, worker processes, and consumer groups.
-- Note which config, env vars, feature flags, or credentials exist only in the worker environment.
-- Keep enqueue request, stored payload, and worker identity tied together.
+- 记录队列名、topic、cron 计划、延迟 job、死信队列、worker 进程与消费组。
+- 注明哪些配置、环境变量、功能开关或凭据只存在于 worker 环境中。
+- 让入队请求、存储的载荷与 worker 身份保持一一对应。
 
-### 2. Trace Worker-Only State And Retries
+### 2. 追踪仅存在于 Worker 的状态与重试
 
-- Show how worker runtime differs from the request path: different env, files, mounts, caches, permissions, or clocks.
-- Record retry count, backoff, dedupe keys, failure handling, dead-letter flow, and idempotency behavior.
-- Distinguish immediate request success from eventual worker success or failure.
+- 说明 worker 运行时与请求路径的差异：不同的环境、文件、挂载、缓存、权限或时钟。
+- 记录重试次数、退避、去重键、失败处理、死信流程与幂等行为。
+- 把「请求立即成功」与「worker 最终成功或失败」区分开。
 
-### 3. Reduce To The Decisive Async Chain
+### 3. 收敛到决定性异步链
 
-- Compress the result to the smallest sequence: enqueue -> worker runtime -> retry or branch -> resulting effect.
-- State clearly whether the decisive difference lives in payload shape, worker config, retry path, or downstream consumer.
-- If the issue is really about the file parser invoked by the worker, switch back to the tighter file-parser skill.
+- 把结论压缩为最小序列：入队 → worker 运行时 → 重试或分支 → 产生的效果。
+- 明确说明决定性差异位于载荷形态、worker 配置、重试路径，还是下游消费方。
+- 若问题实质是 worker 调用的文件解析器，切回更贴合的 file-parser 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/queue-worker-drift.md` for the queue checklist, retry checklist, and evidence packaging.
+- 加载 `references/queue-worker-drift.md`，获取队列检查清单、重试检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Queue names, payloads, worker identities, retry metadata, dead-letter edges, and downstream effects
-- The exact worker-only config or state that changes behavior
-- One minimal enqueue-to-side-effect reproduction chain
+- 队列名、载荷、worker 身份、重试元数据、死信边界与下游效果
+- 改变行为的那些仅存在于 worker 的配置或状态
+- 一条最小的「入队到副作用」复现链

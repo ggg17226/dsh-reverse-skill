@@ -1,50 +1,50 @@
 ---
 name: competition-custom-protocol-replay
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for custom binary or text protocol recovery, handshake reconstruction, framing, sequence control, checksums, stateful replay, and accepted-session reproduction. Use when the user asks to decode an unknown protocol, recover custom framing, build a replay harness, satisfy sequence or checksum rules, replay a captured session, or prove the smallest message order that reaches an accepted branch. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向自定义二进制或文本协议还原、握手重建、分帧（framing）、序列控制、校验和、有状态重放与被接受会话复现的 CTF 沙箱工作流。当用户要求解码未知协议、还原自定义分帧、搭建重放工具、满足序列或校验和规则、重放抓到的会话，或证明能到达被接受分支的最小消息顺序时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Custom Protocol Replay
+# 竞赛自定义协议重放
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the hard part is not merely naming the protocol, but reproducing the exact message order and state needed for acceptance.
+当难点不只是给协议命名，而是复现出被服务端接受所需的精确消息顺序与状态时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Identify client and server roles, session boundaries, and reset conditions before decoding field semantics.
-2. Recover framing, lengths, delimiters, sequence numbers, checksums, nonces, and state transitions before broad replay attempts.
-3. Keep one canonical transcript of a successful exchange.
-4. Change one field or one message at a time while replaying.
-5. Reproduce the smallest accepted conversation that proves the decisive branch.
+1. 在解码字段语义之前，先确定客户端与服务端角色、会话边界与重置条件。
+2. 在大范围重放之前，先还原分帧、长度、分隔符、序列号、校验和、nonce 与状态机转移。
+3. 对一次成功交互保留一份规范记录（canonical transcript）。
+4. 重放时每次只改动一个字段或一条消息。
+5. 复现能证明决定性分支的最小被接受会话。
 
-## Workflow
+## 工作流
 
-### 1. Map The Session State Machine
+### 1. 梳理会话状态机
 
-- Identify handshake, negotiation, authentication, keepalive, command, and teardown phases.
-- Record which fields are static, which are derived, and which depend on prior messages.
-- Keep message order, direction, and timing tied to the same session identity.
+- 识别握手、协商、认证、保活、命令与拆除各阶段。
+- 记录哪些字段是静态的、哪些是推导出来的、哪些依赖先前的消息。
+- 让消息顺序、方向与时间都对应到同一个会话身份。
 
-### 2. Recover Framing And Integrity
+### 2. 还原分帧与完整性校验
 
-- Reconstruct lengths, delimiters, type bytes, checksums, MACs, counters, compression, or encryption boundaries.
-- Distinguish transport framing from application-level framing.
-- Note exactly where server acceptance changes when one field or step is mutated.
+- 重建长度、分隔符、类型字节、校验和、MAC、计数器、压缩或加密边界。
+- 把传输层分帧与应用层分帧区分开。
+- 确切记录改动某个字段或步骤后，服务端接受与否在何处发生变化。
 
-### 3. Build The Minimal Replay Harness
+### 3. 搭建最小重放工具
 
-- Reduce the path to the smallest transcript that reaches the accepted state, parser branch, command effect, or artifact.
-- Preserve both the original captured sequence and the replayed minimal sequence.
-- If the problem is mainly generic PCAP or stream decoding with no stateful replay requirement, switch back to the broader PCAP skill.
+- 把路径压缩到能到达被接受状态、解析器分支、命令效果或产物的最小记录。
+- 同时保留原始抓包序列与重放用的最小序列。
+- 若问题主要是通用 PCAP 或流解码、并无有状态重放要求，切回更通用的 PCAP 技能。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/custom-protocol-replay.md` for the state-machine checklist, transcript checklist, and evidence packaging.
+- 加载 `references/custom-protocol-replay.md`，获取状态机检查清单、记录检查清单与证据打包方式。
 
-## What To Preserve
+## 需要保留的内容
 
-- Canonical transcript, message types, field boundaries, checksums, counters, and session identifiers
-- Original capture slices and the replay harness inputs that produce acceptance
-- The exact mutation that flips the protocol from rejected to accepted, or vice versa
+- 规范记录、消息类型、字段边界、校验和、计数器与会话标识
+- 原始抓包切片，以及能带来「被接受」结果的重放工具输入
+- 让协议从被拒变为被接受（或反向）的确切改动

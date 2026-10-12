@@ -1,9 +1,9 @@
 ---
 name: ot-ics
-description: Use for authorized OT/ICS security assessment covering Purdue model zoning, PLC/SCADA exposure, industrial protocol discovery, and safe passive-first evaluation.
+description: 用于已授权的 OT/ICS 安全评估，涵盖 Purdue 模型分区、PLC/SCADA 暴露面、工业协议发现，以及安全的被动优先评估。
 ---
 
-# OT / ICS Security
+# OT / ICS 安全
 
 ## ACTION REQUIRED（读完后立刻执行）
 

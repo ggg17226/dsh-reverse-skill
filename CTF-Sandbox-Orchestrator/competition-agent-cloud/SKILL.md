@@ -1,53 +1,53 @@
 ---
 name: competition-agent-cloud
-description: Internal downstream skill for ctf-sandbox-orchestrator. CTF-sandbox workflow for AI-agent, prompt-injection, MCP or toolchain, cloud, container, CI/CD, and supply-chain challenges. Use when the user asks to analyze prompt-to-tool flows, retrieval poisoning, mounted secrets, deployment drift, runtime-vs-manifest mismatches, registry provenance, or CI-produced artifacts under sandbox assumptions. Use only after `$ctf-sandbox-orchestrator` has already established sandbox assumptions and routed here.
+description: ctf-sandbox-orchestrator 的内部下游技能。面向 AI Agent、提示注入（prompt injection）、MCP 或工具链、云、容器、CI/CD 与供应链类题目的 CTF 沙箱工作流。当用户要求在沙箱假设下分析「提示到工具」的执行流、检索投毒、被挂载的密钥、部署漂移、运行时与清单不一致，或镜像仓库来源与 CI 产物时使用。仅在 `$ctf-sandbox-orchestrator` 已建立沙箱假设并路由到此处之后使用。
 ---
 
-# Competition Agent Cloud
+# 竞赛 Agent 与云环境
 
-Use this skill only as a downstream specialization after `$ctf-sandbox-orchestrator` is already active and has established sandbox assumptions, node ownership, and evidence priorities. If that has not happened yet, return to `$ctf-sandbox-orchestrator` first.
+仅当 `$ctf-sandbox-orchestrator` 已激活、并已确立沙箱假设、节点归属与证据优先级之后，才把本技能作为下游专项使用。若这些前提尚未成立，先回到 `$ctf-sandbox-orchestrator`。
 
-Use this skill when the challenge path is driven by prompt-to-tool execution, retrieval and memory boundaries, deployment drift, or build and release provenance.
+当题目的解题路径由「提示到工具」的执行、检索与记忆边界、部署漂移，或构建与发布来源驱动时，使用本技能。
 
-Reply in Simplified Chinese unless the user explicitly requests English.
+除非用户明确要求英文，否则用简体中文回复。
 
-## Quick Start
+## 快速开始
 
-1. Decide whether the dominant path is agentic or infrastructure-driven.
-2. Map one minimal control chain: untrusted input -> visible context -> tool or deployment side effect.
-3. Distinguish checked-in intent from live runtime truth.
-4. Keep prompts, tool args, manifests, mounts, and provenance steps in compact evidence blocks.
-5. Reproduce the exploit or misconfiguration with minimal context and minimal instrumentation.
+1. 先判断主导路径是 Agent 侧还是基础设施侧。
+2. 梳理一条最小控制链：不可信输入 → 模型可见上下文 → 工具或部署副作用。
+3. 把「签入（checked-in）的意图」与「运行时的真实状态」区分开。
+4. 用紧凑的证据区块保留提示、工具参数、清单、挂载与来源追踪步骤。
+5. 用最小上下文与最少插桩复现该利用或错误配置。
 
-## Workflow
+## 工作流
 
-### 1. Agent And Prompt Injection
+### 1. Agent 与提示注入
 
-- Treat prompts, tool schemas, retrieved chunks, planner notes, memory files, and handoffs as challenge artifacts.
-- Prove one minimal chain from untrusted content to model-visible instruction to tool side effect.
-- Distinguish claimed capability from runtime-exposed capability.
+- 把提示、工具 schema、检索到的分块、规划器笔记、记忆文件与交接信息都视为题目取证对象。
+- 证明一条最小链条：不可信内容 → 模型可见指令 → 工具副作用。
+- 把「声称具备的能力」与「运行时实际暴露的能力」区分开。
 
-### 2. Cloud, Containers, And CI/CD
+### 2. 云、容器与 CI/CD
 
-- Split build-time, deploy-time, and runtime.
-- Reconcile compose or kube manifests with live mounts, env, logs, and traffic.
-- Trace provenance from source to dependency resolution to build to publish to runtime consumer.
+- 把构建期、部署期与运行期拆开分析。
+- 将 compose 或 kube 清单与实时的挂载、环境变量、日志与流量相互对照。
+- 追踪来源链：源码 → 依赖解析 → 构建 → 发布 → 运行时消费方。
 
-## Read This Reference
+## 阅读本参考
 
-- Load `references/agent-cloud.md` for the control-stack checklist, deployment-truth checklist, and evidence packaging.
-- If the task is specifically about prompt-boundary abuse or retrieved-content-to-tool drift, prefer `$competition-prompt-injection`.
-- If the task is specifically about CI, dependency provenance, registry drift, or shipped artifacts, prefer `$competition-supply-chain`.
-- If the task is specifically about queue payloads, async worker drift, retries, or worker-only runtime state, prefer `$competition-queue-worker-drift`.
-- If the task is specifically about SSRF to internal control surfaces, metadata endpoints, or metadata-derived token pivots, prefer `$competition-ssrf-metadata-pivot`.
-- If the task is specifically about proxy-upstream parse differentials, ambiguous headers, path normalization drift, or request smuggling behavior, prefer `$competition-request-normalization-smuggling`.
-- If the task is specifically about metadata-service access, instance or workload identity, link-local token paths, or metadata-derived privilege, prefer `$competition-cloud-metadata-path`.
-- If the task is specifically about kube API permissions, service-account trust, admission behavior, controller drift, or cluster secret exposure, prefer `$competition-k8s-control-plane`.
-- If the task is specifically about live mounts, sidecars, init containers, or runtime-only secret exposure, prefer `$competition-container-runtime`.
-- If the task is specifically about container-to-host boundary crossing, kernel-surface prerequisites, or escape primitive verification, prefer `$competition-kernel-container-escape`.
+- 加载 `references/agent-cloud.md`，获取控制栈检查清单、部署真相检查清单与证据打包方式。
+- 若任务具体涉及提示边界滥用或「检索内容到工具」的漂移，优先用 `$competition-prompt-injection`。
+- 若任务具体涉及 CI、依赖来源、镜像仓库漂移或交付产物，优先用 `$competition-supply-chain`。
+- 若任务具体涉及队列消息体、异步 worker 漂移、重试或仅存在于 worker 的运行时状态，优先用 `$competition-queue-worker-drift`。
+- 若任务具体涉及 SSRF 打向内部控制面、元数据端点或由元数据派生的令牌跳板，优先用 `$competition-ssrf-metadata-pivot`。
+- 若任务具体涉及代理与上游的解析差异、歧义头部、路径归一化漂移或请求走私行为，优先用 `$competition-request-normalization-smuggling`。
+- 若任务具体涉及元数据服务访问、实例或工作负载身份、链路本地令牌路径或元数据派生权限，优先用 `$competition-cloud-metadata-path`。
+- 若任务具体涉及 kube API 权限、服务账号信任、准入控制行为、控制器漂移或集群密钥暴露，优先用 `$competition-k8s-control-plane`。
+- 若任务具体涉及实时挂载、sidecar、init 容器或仅运行时可见的密钥暴露，优先用 `$competition-container-runtime`。
+- 若任务具体涉及容器到宿主机的边界穿越、内核面前置条件或逃逸原语验证，优先用 `$competition-kernel-container-escape`。
 
-## What To Preserve
+## 需要保留的内容
 
-- Prompt snippets, retrieved chunks, planner transitions, and final tool args
-- Compose or Kubernetes fragments tied to live mounts or routes
-- Artifact hashes, dependency drift, CI steps, and the resulting runtime consumer
+- 提示片段、检索到的分块、规划器状态转移与最终工具参数
+- 与实时挂载或路由相对应的 compose 或 Kubernetes 片段
+- 产物哈希、依赖漂移、CI 步骤与最终运行时消费方

@@ -1,9 +1,9 @@
 ---
 name: ghidra-reverse
-description: Use for free/open reverse engineering with Ghidra (headless or GUI), including decompile, cross-refs, and optional Ghidra MCP workflows when IDA is unavailable.
+description: 用于基于 Ghidra（headless 或 GUI）的免费/开源逆向工程，涵盖反编译、交叉引用，以及在缺少 IDA 时可选的 Ghidra MCP 工作流。
 ---
 
-# Ghidra Reverse Engineering
+# Ghidra 逆向工程
 
 ## ACTION REQUIRED（读完后立刻执行）
 
